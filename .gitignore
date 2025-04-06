@@ -1,0 +1,56 @@
+# Built application files
+*.apk
+*.ap_
+*.aab
+*.aar
+*.jar
+
+# Generated files
+bin/
+gen/
+build/
+out/
+app/build/
+
+# Gradle files
+.gradle/
+gradle-app.setting
+
+# Local configuration file (sdk路径、敏感信息)
+local.properties
+
+# Log/临时文件
+*.log
+*.tmp
+*.bak
+
+# Android Studio 特定文件
+.idea/
+*.iml
+*.iws
+*.ipr
+.navigation/
+captures/
+app/release/
+app/debug/
+
+# Keystore 文件（切勿提交！）
+*.jks
+*.keystore
+
+# Firebase 配置文件（通常包含敏感信息）
+google-services.json
+GoogleService-Info.plist
+
+# macOS 系统文件
+.DS_Store
+
+# Windows 系统文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 其他通用忽略
+*.swp
+*.swo
+*.class

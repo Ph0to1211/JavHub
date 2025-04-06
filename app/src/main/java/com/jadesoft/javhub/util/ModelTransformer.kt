@@ -1,0 +1,34 @@
+package com.jadesoft.javhub.util
+
+import com.jadesoft.javhub.data.db.dto.HistoryEntity
+import com.jadesoft.javhub.data.db.dto.MovieEntity
+import com.jadesoft.javhub.data.model.Movie
+
+fun MovieEntity.toModel(): Movie = Movie(
+    code = this.code,
+    title = this.title,
+    cover = this.cover
+)
+
+fun Movie.toEntity(tag: String, cover: String, createDate: String): MovieEntity = MovieEntity(
+    id = 0,
+    tag = tag,
+    code = this.code,
+    title = this.title,
+    cover = cover,
+    createDate = createDate
+)
+
+fun HistoryEntity.toModel(): Movie = Movie(
+    code = this.code,
+    title = this.title,
+    cover = this.cover
+)
+
+fun Movie.toHistoryEntity(cover: String, createDate: String): HistoryEntity = HistoryEntity(
+    id = 0,
+    code = this.code,
+    title = this.title,
+    cover = cover,
+    createDate = createDate
+)
