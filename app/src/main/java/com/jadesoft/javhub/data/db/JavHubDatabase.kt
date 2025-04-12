@@ -5,13 +5,15 @@ import androidx.room.RoomDatabase
 import com.jadesoft.javhub.data.db.dao.JavHubDao
 import com.jadesoft.javhub.data.db.dto.HistoryEntity
 import com.jadesoft.javhub.data.db.dto.MovieEntity
+import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
 
 @Database(
     entities = [
         MovieEntity::class,
-        HistoryEntity::class
+        HistoryEntity::class,
+        SearchHistoryEntity::class
     ],
-    version = 1
+    version = 2
 )
 
 abstract class JavHubDatabase: RoomDatabase() {

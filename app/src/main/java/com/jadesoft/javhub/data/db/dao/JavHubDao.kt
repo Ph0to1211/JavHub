@@ -1,13 +1,12 @@
 package com.jadesoft.javhub.data.db.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.jadesoft.javhub.data.db.dto.HistoryEntity
 import com.jadesoft.javhub.data.db.dto.MovieEntity
-import com.jadesoft.javhub.data.model.Movie
+import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
 
 @Dao
 interface JavHubDao {
@@ -51,4 +50,21 @@ interface JavHubDao {
 
     @Query("DELETE FROM historyentity WHERE code = :code")
     suspend fun deleteHistory(code: String)
+
+
+    /* ---------- SearchHistoryEntity ---------- */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSearchHistory(history: SearchHistoryEntity)
+
+    @Query("SELECT * FROM searchhistoryentity")
+    suspend fun getSearchHistories(): List<SearchHistoryEntity>
+
+    @Query("DELETE FROM searchhistoryentity WHERE `query` = :query")
+    suspend fun deleteSearchHistoryByQuery(query: String)
+
+    @Query("DELETE FROM searchhistoryentity")
+    suspend fun deleteSearchHistories()
+
+    @Query("DELETE FROM searchhistoryentity WHERE `query` = (SELECT `query` FROM searchhistoryentity ORDER BY timestamp ASC LIMIT 1)")
+    suspend fun deleteFirstSearchHistory()
 }

@@ -1,5 +1,6 @@
 package com.jadesoft.javhub.ui.search
 
+import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
 import com.jadesoft.javhub.data.model.Movie
 
 data class SearchState(
@@ -11,10 +12,13 @@ data class SearchState(
     val pagination: Pagination = Pagination(),
     val itemStyle: Int = 0,
     val itemNum: Int = 0,
+    val isStealth: Boolean = false,
     val isBlurred: Boolean = false,
     val searchQuery: String = "",
+    val searchError: String? = null,
     val type: Int = 1,
-    val selectedIndex: Int = 0
+    val selectedIndex: Int = 0,
+    val searchHistories: List<SearchHistoryEntity> = emptyList()
 )
 
 data class Pagination(

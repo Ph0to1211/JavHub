@@ -24,7 +24,9 @@ object DatabaseModule {
             context,
             JavHubDatabase::class.java,
             "javhub_database.db"
-        ).build()
+        )
+        .fallbackToDestructiveMigration()
+        .build()
     }
 
     @Provides

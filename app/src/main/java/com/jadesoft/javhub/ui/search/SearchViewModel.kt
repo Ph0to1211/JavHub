@@ -1,16 +1,14 @@
 package com.jadesoft.javhub.ui.search
 
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jadesoft.javhub.data.model.Movie
+import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
 import com.jadesoft.javhub.data.preferences.PreferencesManager
 import com.jadesoft.javhub.data.repository.SearchRepository
-import com.jadesoft.javhub.ui.explore.ExploreState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -31,7 +29,8 @@ class SearchViewModel @Inject constructor(
             onlyShowMag = preferences.onlyShowMag,
             itemStyle = preferences.itemStyle,
             itemNum = preferences.itemNum,
-            isBlurred = preferences.publicMode
+            isBlurred = preferences.publicMode,
+            isStealth = preferences.stealthMode
         )
     )
     val searchState: StateFlow<SearchState> = _searchState
@@ -41,6 +40,7 @@ class SearchViewModel @Inject constructor(
 
     private var searchJob: Job? = null
     private var loadJob: Job? = null
+    private var daoJob: Job? = null
 
 
     fun onEvent(event: SearchEvent) {
@@ -48,11 +48,16 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.ValueChange -> handleValueChange(event.text)
             is SearchEvent.ClearQuery -> handleClearQuery()
             is SearchEvent.LoadItems -> handleLoadItems()
-            is SearchEvent.SubmitSearch -> handleSubmitSearch()
+            is SearchEvent.SubmitSearch -> handleSubmitSearch(event.saveHistory)
             is SearchEvent.ToggleMag -> handleToggleMag()
             is SearchEvent.RefreshData -> handleRefreshData()
             is SearchEvent.RefreshFilter -> handleRefreshFilter()
             is SearchEvent.ModifierType -> handleModifierType(event.index)
+            is SearchEvent.GetSearchHistory -> handleGetSearchHistory()
+            is SearchEvent.InsertSearchHistory -> handleInsertSearchHistory(event.query)
+            is SearchEvent.DeleteSingleSearchHistory -> handleDeleteSingleSearchHistory(event.query)
+            is SearchEvent.DeleteSearchHistory -> handleDeleteSearchHistory()
+            is SearchEvent.OnHistoryItemClicked -> handleHistoryItemClicked(event.query)
         }
     }
 
@@ -62,7 +67,7 @@ class SearchViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(500) // 防抖延迟500ms
             if (text.isNotEmpty()) {
-                handleSubmitSearch() // 自动触发搜索
+                handleSubmitSearch(false) // 自动触发搜索
             }
         }
 
@@ -102,10 +107,34 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun handleSubmitSearch() {
-        triggerRefreshData()
-        triggerRefreshFilter()
-        updateState { copy(showResult = true) }
+    private fun validateSearchQuery(query: String): Boolean {
+        return when {
+            query.isBlank() -> {
+                updateState { copy(searchError = "关键词不能为空") }
+                false
+            }
+            query.length > 50 -> {
+                updateState { copy(searchError = "关键词长度不能超过50字") }
+                false
+            }
+            else -> {
+                updateState { copy(searchError = null) } // 清除错误状态
+                true
+            }
+        }
+    }
+
+    fun clearValidationError() {
+        updateState { copy(searchError = null) }
+    }
+
+    private fun handleSubmitSearch(saveHistory: Boolean) {
+        if (validateSearchQuery(_searchState.value.searchQuery)) {
+            triggerRefreshData()
+            triggerRefreshFilter()
+            if (!_searchState.value.isStealth && saveHistory) handleInsertSearchHistory(_searchState.value.searchQuery)
+            updateState { copy(showResult = true) }
+        }
     }
 
     private fun handleToggleMag() {
@@ -130,7 +159,7 @@ class SearchViewModel @Inject constructor(
         ) }
     }
 
-    private fun handleModifierType(index: Int){
+    private fun handleModifierType(index: Int) {
         updateState { copy(selectedIndex = index) }
         when (index) {
             0 -> {
@@ -173,6 +202,48 @@ class SearchViewModel @Inject constructor(
         }
         triggerRefreshData()
     }
+
+    private fun handleGetSearchHistory() {
+        viewModelScope.launch {
+            val histories = searchRepository.getSearchHistories();
+            updateState { copy(
+                searchHistories = histories
+            ) }
+        }
+    }
+
+    private fun handleInsertSearchHistory(query: String) {
+        viewModelScope.launch {
+            val currentCount = searchRepository.getSearchHistories().size
+            if (currentCount >= 30) {
+                searchRepository.deleteFirstSearchHistory()
+            }
+            val searchHistory = SearchHistoryEntity(query = query)
+            searchRepository.insertSearchHistory(searchHistory)
+            handleGetSearchHistory()
+        }
+
+    }
+
+    private fun handleDeleteSingleSearchHistory(query: String) {
+        viewModelScope.launch {
+            searchRepository.deleteSingleSearchHistory(query)
+            handleGetSearchHistory()
+        }
+    }
+
+    private fun handleDeleteSearchHistory() {
+        viewModelScope.launch {
+            searchRepository.deleteSearchHistory()
+            handleGetSearchHistory()
+        }
+    }
+
+    private fun handleHistoryItemClicked(query: String) {
+        updateState { copy(searchQuery = query) }
+        handleSubmitSearch(true)
+    }
+
 
     /* 辅助函数 */
     // region 工具方法

@@ -1,12 +1,15 @@
 package com.jadesoft.javhub.data.repository
 
 import com.jadesoft.javhub.data.api.ApiService
+import com.jadesoft.javhub.data.db.dao.JavHubDao
+import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.util.HtmlParser
 import javax.inject.Inject
 
 class SearchRepository @Inject constructor(
-    private val service: ApiService
+    private val service: ApiService,
+    private val dao: JavHubDao
 ) {
     suspend fun search(query: String, showUncensored: Boolean, onlyShowMag: Boolean, page: Int, type: Int): List<Movie> {
         val currentGenre = if (showUncensored) "uncensored" else ""
@@ -31,5 +34,25 @@ class SearchRepository @Inject constructor(
             println("HTTP Error: $e")
             listOf()
         }
+    }
+
+    suspend fun getSearchHistories(): List<SearchHistoryEntity> {
+        return dao.getSearchHistories()
+    }
+
+    suspend fun insertSearchHistory(searchHistory: SearchHistoryEntity) {
+        dao.insertSearchHistory(searchHistory)
+    }
+
+    suspend fun deleteSingleSearchHistory(query: String) {
+        dao.deleteSearchHistoryByQuery(query)
+    }
+
+    suspend fun deleteSearchHistory() {
+        dao.deleteSearchHistories()
+    }
+
+    suspend fun deleteFirstSearchHistory() {
+        dao.deleteFirstSearchHistory()
     }
 }

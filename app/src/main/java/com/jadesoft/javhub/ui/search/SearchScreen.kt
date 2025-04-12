@@ -2,60 +2,46 @@ package com.jadesoft.javhub.ui.search
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jadesoft.javhub.presentation.search.SearchFilterBar
+import com.jadesoft.javhub.presentation.search.SearchHistoryContent
 import com.jadesoft.javhub.presentation.search.SearchResultContent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +53,9 @@ fun SearchScreen(
 ) {
     val searchState = searchViewModel.searchState.collectAsState()
 
+    val searchHistories = searchState.value.searchHistories
     val searchQuery = searchState.value.searchQuery
+    val searchError = searchState.value.searchError
     val showResult = searchState.value.showResult
     val onlyShowMag = searchState.value.onlyShowMag
     val selectedIndex = searchState.value.selectedIndex
@@ -82,6 +70,10 @@ fun SearchScreen(
 
     val focusManager = LocalFocusManager.current
 
+    LaunchedEffect(Unit) {
+        searchViewModel.onEvent(SearchEvent.GetSearchHistory)
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -95,7 +87,13 @@ fun SearchScreen(
                 title = {
                     OutlinedTextField(
                         value = searchQuery,
-                        onValueChange = { searchViewModel.onEvent(SearchEvent.ValueChange(it)) },
+                        onValueChange = {
+                            searchViewModel.onEvent(SearchEvent.ValueChange(it))
+                            if (searchError != null) {
+                                searchViewModel.clearValidationError()
+                            }
+                        },
+                        isError = searchError != null,
                         textStyle = MaterialTheme.typography.bodyLarge,
                         shape = RoundedCornerShape(60.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -103,17 +101,34 @@ fun SearchScreen(
                             unfocusedBorderColor = Color.Transparent,
                             focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            errorBorderColor = MaterialTheme.colorScheme.error,
+                            errorContainerColor = MaterialTheme.colorScheme.errorContainer,
                         ),
-                        placeholder = { Text("请输入关键词") },
+                        placeholder = {
+                            if (searchError != null) {
+                                Text(
+                                    text = searchError,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            } else {
+                                Text("请输入关键词")
+                            }
+                        },
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                searchViewModel.onEvent(SearchEvent.SubmitSearch)
+                                searchViewModel.onEvent(SearchEvent.SubmitSearch(true))
                                 focusManager.clearFocus()
                             }
                         ),
                         singleLine = true,
                         trailingIcon = {
-                            if (searchQuery != "") {
+                            if (searchError != null) {
+                                Icon(
+                                    Icons.Filled.Error,
+                                    "错误",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            } else if (searchQuery != "") {
                                 IconButton(
                                     onClick = {
                                         searchViewModel.onEvent(SearchEvent.ClearQuery)
@@ -143,15 +158,15 @@ fun SearchScreen(
                                 )
                             ) {
                                 if (onlyShowMag) {
-                                    Icon(Icons.Default.Link, "已有磁力", tint = MaterialTheme.colorScheme.secondary)
+                                    Icon(Icons.Default.Link, "已有磁链", tint = MaterialTheme.colorScheme.secondary)
                                 } else {
-                                    Icon(Icons.Default.LinkOff, "查看全部", tint = MaterialTheme.colorScheme.secondary)
+                                    Icon(Icons.Default.LinkOff, "全部影片", tint = MaterialTheme.colorScheme.secondary)
                                 }
                             }
                         }
                         IconButton(
                             onClick = {
-                                searchViewModel.onEvent(SearchEvent.SubmitSearch)
+                                searchViewModel.onEvent(SearchEvent.SubmitSearch(true))
                                 focusManager.clearFocus()
                             },
                             colors = IconButtonDefaults.iconButtonColors(
@@ -186,13 +201,12 @@ fun SearchScreen(
                     navController = navController
                 )
             } else {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("它需要做些什么...", style = MaterialTheme.typography.bodyLarge)
-                }
+                SearchHistoryContent(
+                    searchHistories = searchHistories,
+                    deleteSingleSearchHistory = searchViewModel::onEvent,
+                    deleteSearchHistory = searchViewModel::onEvent,
+                    onHistoryItemClicked = searchViewModel::onEvent
+                )
             }
         }
     }
