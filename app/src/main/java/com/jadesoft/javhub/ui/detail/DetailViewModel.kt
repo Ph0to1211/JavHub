@@ -1,16 +1,14 @@
 package com.jadesoft.javhub.ui.detail
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jadesoft.javhub.data.db.dao.JavHubDao
 import com.jadesoft.javhub.data.db.dto.HistoryEntity
 import com.jadesoft.javhub.data.db.dto.MovieEntity
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.data.model.MovieDetail
 import com.jadesoft.javhub.data.preferences.PreferencesManager
 import com.jadesoft.javhub.data.repository.DetailRepository
+import com.jadesoft.javhub.util.CommonUtils
 import com.jadesoft.javhub.util.toEntity
 import com.jadesoft.javhub.util.toHistoryEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +32,7 @@ class DetailViewModel @Inject constructor(
             censoredType = preferences.showUncensored,
             isStealth = preferences.stealthMode,
             tags = stringToList(preferences.userTags),
-            selectedTags = stringToList(stringToList(preferences.userTags)[0])
+            selectedTags = stringToList(stringToList(preferences.userTags)[0]),
         )
     )
     val detailState: StateFlow<DetailState> = _detailState
@@ -55,6 +53,7 @@ class DetailViewModel @Inject constructor(
             is DetailEvent.InitState -> handleInitState()
             is DetailEvent.EditTags -> handleEditTags(event.tag)
             is DetailEvent.ToggleShowDialog -> handleToggleShowDialog()
+            is DetailEvent.VideoUrlInitialize -> handleVideoUrlInitialize(event.code)
         }
     }
 
@@ -65,6 +64,19 @@ class DetailViewModel @Inject constructor(
             updateState { copy(movie = res) }
         }
         updateState { copy(isLoading = false) }
+    }
+
+    private fun handleVideoUrlInitialize(code: String) {
+        if (_detailState.value.isVideoUrlInitialized) return
+        viewModelScope.launch {
+            val videoUrls = CommonUtils.generateVideoUrls(code)
+            CommonUtils.findFirstValidLink(videoUrls) { validUrl ->
+                if (validUrl.isNotEmpty()) {
+                    updateState { copy(videoUrl = validUrl) }
+                }
+            }
+            updateState { copy(isVideoUrlInitialized = true) }
+        }
     }
 
     private fun handleToggleShowViewer() {

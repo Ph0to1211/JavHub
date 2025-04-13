@@ -12,4 +12,5 @@ sealed class DetailEvent {
     object InitState : DetailEvent()
     data class EditTags(val tag: String) : DetailEvent()
     object ToggleShowDialog : DetailEvent()
+    data class VideoUrlInitialize(val code: String) : DetailEvent()
 }

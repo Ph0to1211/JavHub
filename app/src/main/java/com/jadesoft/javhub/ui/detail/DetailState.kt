@@ -14,5 +14,7 @@ data class DetailState(
     val isUserAction: Boolean = false,
     val tags: List<String> = emptyList(),
     val selectedTags: List<String> = emptyList(),
-    val showDialog: Boolean = false
+    val showDialog: Boolean = false,
+    val videoUrl: String = "",
+    val isVideoUrlInitialized: Boolean = false
 )
