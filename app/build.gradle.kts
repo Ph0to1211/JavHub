@@ -9,6 +9,13 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/ray/Development/keystore/JavHub.keystore")
+            storePassword = "15916679533."
+            keyAlias = "jav_hub"
+        }
+    }
     namespace = "com.jadesoft.javhub"
     compileSdk = 35
 
@@ -29,6 +36,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -68,6 +76,10 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
+    // Jetpack exoplayer
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.ui)
 
     // Navigation-Compose
     implementation(libs.androidx.navigation.compose)

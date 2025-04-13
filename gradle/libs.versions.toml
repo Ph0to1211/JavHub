@@ -20,6 +20,7 @@ coroutines = "1.9.0"
 jsoup = "1.18.3"
 kotlinx-serialization = "1.6.0"
 zoomable = "1.4.1"
+exoplayer = "1.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,8 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 zoomable = { module = "com.mxalbert.zoomable:zoomable", version.ref = "zoomable"}
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
+media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
