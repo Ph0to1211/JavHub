@@ -1,10 +1,25 @@
 package com.jadesoft.javhub.data.preferences
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class PreferencesManager(context: Context) {
     private val sharePres = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+    // 暴露 SharedPreferences 的 Flow 式监听（监听所有Key变化）
+    val preferencesChangeFlow: Flow<Unit> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+            trySend(Unit) // 通知变化
+        }
+        sharePres.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose {
+            sharePres.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
 
     companion object Keys {
         // Style options
@@ -44,7 +59,7 @@ class PreferencesManager(context: Context) {
 
 
     var userTags: String
-        get() = sharePres.getString(USER_TAGS, "默认,新推出,热映,即将上映").toString()
+        get() = sharePres.getString(USER_TAGS, "默认").toString()
         set(value) {sharePres.edit { putString(USER_TAGS, value) }}
 
 

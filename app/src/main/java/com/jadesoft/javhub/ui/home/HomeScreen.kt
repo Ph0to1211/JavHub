@@ -187,12 +187,16 @@ fun HomeScreen(
                     NavigationBarItem(
                         selected = currentDestination?.route == route.route,
                         onClick = {
-                            homeNavController.navigate(route.route) {
-                                popUpTo(homeNavController.graph.findStartDestination().id) {
-                                    saveState = true
+                            if (route.route != "library") {
+                                homeNavController.navigate(route.route) {
+                                    popUpTo(homeNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
+                            } else {
+                                homeNavController.navigate(route.route)
                             }
                         },
                         label = { Text(route.name) },

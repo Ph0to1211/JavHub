@@ -13,7 +13,8 @@ import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
         HistoryEntity::class,
         SearchHistoryEntity::class
     ],
-    version = 2
+    version = 2,
+    exportSchema = false
 )
 
 abstract class JavHubDatabase: RoomDatabase() {

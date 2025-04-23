@@ -1,5 +1,6 @@
 package com.jadesoft.javhub.ui.more
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.ChildCare
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
@@ -31,9 +33,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,6 +50,8 @@ fun MoreScreen(
 
     val isPublic = moreState.value.isPublic
     val isStealth = moreState.value.isStealth
+
+    val context = LocalContext.current
 
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -92,30 +98,48 @@ fun MoreScreen(
             )
             HorizontalDivider()
             ListItem(
+                leadingContent = { Icon(Icons.Filled.BookmarkBorder, contentDescription = "标签", tint = MaterialTheme.colorScheme.secondary) },
+                headlineContent = { Text("标签") },
+                modifier = Modifier.clickable {
+                    navController.navigate("tag")
+                }
+            )
+            ListItem(
                 leadingContent = { Icon(Icons.Filled.BarChart, contentDescription = "统计", tint = MaterialTheme.colorScheme.secondary) },
                 headlineContent = { Text("统计") },
-                modifier = Modifier.clickable {  }
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
+                }
             )
             ListItem(
                 leadingContent = { Icon(Icons.Filled.Storage, contentDescription = "数据与存储", tint = MaterialTheme.colorScheme.secondary) },
                 headlineContent = { Text("数据与存储") },
-                modifier = Modifier.clickable {  }
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
+                }
             )
             HorizontalDivider()
             ListItem(
                 leadingContent = { Icon(Icons.Filled.Settings, contentDescription = "设置", tint = MaterialTheme.colorScheme.secondary) },
                 headlineContent = { Text("设置") },
-                modifier = Modifier.clickable {  }
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
+//                    navController.navigate("setting")
+                }
             )
             ListItem(
                 leadingContent = { Icon(Icons.Filled.Info, contentDescription = "关于", tint = MaterialTheme.colorScheme.secondary) },
                 headlineContent = { Text("关于") },
-                modifier = Modifier.clickable {  }
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
+                }
             )
             ListItem(
                 leadingContent = { Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "帮助", tint = MaterialTheme.colorScheme.secondary) },
                 headlineContent = { Text("帮助") },
-                modifier = Modifier.clickable {  }
+                modifier = Modifier.clickable {
+                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
+                }
             )
         }
 

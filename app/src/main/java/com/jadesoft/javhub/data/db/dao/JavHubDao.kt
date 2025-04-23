@@ -1,5 +1,6 @@
 package com.jadesoft.javhub.data.db.dao
 
+import androidx.annotation.NonNull
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -39,6 +40,41 @@ interface JavHubDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM movieentity WHERE code = :code LIMIT 1)")
     suspend fun isMovieExists(code: String): Boolean
+
+    @Query("""
+        UPDATE MovieEntity 
+        SET tag = 
+          CASE 
+            WHEN TRIM(
+              REPLACE(
+                REPLACE(
+                  REPLACE(
+                    REPLACE(tag, ',' || :targetTag, ''),
+                    :targetTag || ',', ''
+                  ),
+                  :targetTag, '默认'
+                ),
+                ',,', ','
+              )
+            ) = '' 
+            THEN '默认'
+            ELSE TRIM(
+              REPLACE(
+                REPLACE(
+                  REPLACE(
+                    REPLACE(tag, ',' || :targetTag, ''),
+                    :targetTag || ',', ''
+                  ),
+                  :targetTag, '默认'
+                ),
+                ',,', ','
+              ),
+              ','
+            )
+          END
+        WHERE tag LIKE '%' || :targetTag || '%'
+    """)
+    suspend fun replaceTag(targetTag: String)
 
 
     /* ---------- HistoryEntity ---------- */

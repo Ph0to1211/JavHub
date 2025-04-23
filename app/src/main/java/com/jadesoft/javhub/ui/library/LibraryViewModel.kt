@@ -6,7 +6,6 @@ import com.jadesoft.javhub.data.db.dto.MovieEntity
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.data.preferences.PreferencesManager
 import com.jadesoft.javhub.data.repository.LibraryRepository
-import com.jadesoft.javhub.ui.explore.ExploreState
 import com.jadesoft.javhub.util.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -22,15 +21,40 @@ class LibraryViewModel @Inject constructor(
     private val preferences: PreferencesManager
 ) : ViewModel() {
 
-    private val _libraryState = MutableStateFlow(
-        LibraryState(
+//    private val _libraryState = MutableStateFlow(
+//        LibraryState(
+//            itemStyle = preferences.itemStyle,
+//            itemNum = preferences.itemNum,
+//            isBlurred = preferences.publicMode,
+//            tags = stringToList(preferences.userTags)
+//        )
+//    )
+//    val libraryState: StateFlow<LibraryState> = _libraryState
+
+    private val _libraryState = MutableStateFlow(createLibraryState())
+    val libraryState: StateFlow<LibraryState> = _libraryState
+
+    init {
+        observePreferences()
+    }
+
+    private fun observePreferences() {
+        viewModelScope.launch {
+            preferences.preferencesChangeFlow
+                .collect {
+                    _libraryState.update { createLibraryState() }
+                }
+        }
+    }
+
+    private fun createLibraryState(): LibraryState {
+        return LibraryState(
             itemStyle = preferences.itemStyle,
             itemNum = preferences.itemNum,
             isBlurred = preferences.publicMode,
             tags = stringToList(preferences.userTags)
         )
-    )
-    val libraryState: StateFlow<LibraryState> = _libraryState
+    }
 
     var loadJob: Job? = null
 

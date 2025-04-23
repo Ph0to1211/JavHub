@@ -244,7 +244,8 @@ fun DetailScreen(
                 onConfirm = detailViewModel::onEvent,
                 editTags = detailViewModel::onEvent,
                 tags = tags,
-                selectedTags = selectedTags
+                selectedTags = selectedTags,
+                toAdd = { navController.navigate("tag") }
             )
 
             if (showImageViewer) {

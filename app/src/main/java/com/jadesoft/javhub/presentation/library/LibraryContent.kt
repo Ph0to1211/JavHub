@@ -41,7 +41,7 @@ fun LibraryContent(
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
-            edgePadding = 0.dp,
+            edgePadding = 16.dp,
             divider = {}
         ) {
             tags.forEachIndexed { index, tag ->

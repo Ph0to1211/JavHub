@@ -19,6 +19,13 @@ import com.jadesoft.javhub.ui.home.HomeScreen
 import com.jadesoft.javhub.ui.movie.ListType
 import com.jadesoft.javhub.ui.movie.MovieScreen
 import com.jadesoft.javhub.ui.search.SearchScreen
+import com.jadesoft.javhub.ui.setting.AboutScreen
+import com.jadesoft.javhub.ui.setting.AppearanceScreen
+import com.jadesoft.javhub.ui.setting.GeneralScreen
+import com.jadesoft.javhub.ui.setting.PrivacyScreen
+import com.jadesoft.javhub.ui.setting.SettingScreen
+import com.jadesoft.javhub.ui.setting.StorageScreen
+import com.jadesoft.javhub.ui.tag.TagScreen
 import com.jadesoft.javhub.ui.video.VideoScreen
 import kotlinx.serialization.Serializable
 
@@ -100,6 +107,13 @@ fun NavGraph(
         composable( Destinations.CATEGORY ) { CategoryScreen(navController) }
 //        composable( Destinations.MORE ) { MoreScreen(navController) }
         composable( Destinations.SEARCH ) { SearchScreen(navController) }
+//        composable( Destinations.SETTING ) { SettingScreen(navController) }
+//        composable( Destinations.GENERAL ) { GeneralScreen { navController.popBackStack() } }
+//        composable( Destinations.APPEARANCE ) { AppearanceScreen { navController.popBackStack() } }
+//        composable( Destinations.STORAGE ) { StorageScreen { navController.popBackStack() } }
+//        composable( Destinations.PRIVACY ) { PrivacyScreen { navController.popBackStack() } }
+//        composable( Destinations.ABOUT ) { AboutScreen { navController.popBackStack() } }
+        composable( Destinations.TAG ) { TagScreen(navController) }
     }
 }
 
@@ -113,6 +127,13 @@ object Destinations {
     const val CATEGORY = "category"
     const val MORE = "more"
     const val SEARCH = "search"
+//    const val SETTING = "setting"
+//    const val GENERAL = "general"
+//    const val APPEARANCE = "appearance"
+//    const val STORAGE = "storage"
+//    const val PRIVACY = "privacy"
+//    const val ABOUT = "about"
+    const val TAG = "tag"
 }
 
 
@@ -136,3 +157,6 @@ data class GenreRoute(val code: String, val name: String)
 
 @Serializable
 data class VideoRoute(val title: String, val url: String)
+
+@Serializable
+data class SettingRoute(val title: String, val navigateBack: () -> Unit)

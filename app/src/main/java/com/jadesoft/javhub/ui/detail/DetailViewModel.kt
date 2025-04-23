@@ -27,15 +27,31 @@ class DetailViewModel @Inject constructor(
     private val preferences: PreferencesManager
 ): ViewModel() {
 
-    private val _detailState = MutableStateFlow(
-        DetailState(
+    private val _detailState = MutableStateFlow(createDetailState())
+    val detailState: StateFlow<DetailState> = _detailState
+
+    init {
+        observePreferences()
+    }
+
+    private fun observePreferences() {
+        viewModelScope.launch {
+            preferences.preferencesChangeFlow
+                .collect {
+                    _detailState.update { createDetailState() }
+                }
+        }
+    }
+
+    private fun createDetailState(): DetailState {
+        val tags = stringToList(preferences.userTags)
+        return DetailState(
             censoredType = preferences.showUncensored,
             isStealth = preferences.stealthMode,
-            tags = stringToList(preferences.userTags),
-            selectedTags = stringToList(stringToList(preferences.userTags)[0]),
+            tags = tags,
+            selectedTags = stringToList(tags.firstOrNull() ?: "") // 安全处理空值
         )
-    )
-    val detailState: StateFlow<DetailState> = _detailState
+    }
 
     private var daoJob: Job? = null
 
