@@ -12,19 +12,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.jadesoft.javhub.ui.category.CategoryScreen
 import com.jadesoft.javhub.ui.detail.DetailScreen
 import com.jadesoft.javhub.ui.genre.GenreScreen
 import com.jadesoft.javhub.ui.home.HomeScreen
 import com.jadesoft.javhub.ui.movie.ListType
 import com.jadesoft.javhub.ui.movie.MovieScreen
 import com.jadesoft.javhub.ui.search.SearchScreen
-import com.jadesoft.javhub.ui.setting.AboutScreen
-import com.jadesoft.javhub.ui.setting.AppearanceScreen
-import com.jadesoft.javhub.ui.setting.GeneralScreen
-import com.jadesoft.javhub.ui.setting.PrivacyScreen
 import com.jadesoft.javhub.ui.setting.SettingScreen
-import com.jadesoft.javhub.ui.setting.StorageScreen
 import com.jadesoft.javhub.ui.tag.TagScreen
 import com.jadesoft.javhub.ui.video.VideoScreen
 import kotlinx.serialization.Serializable
@@ -44,19 +38,6 @@ fun NavGraph(
         enterTransition = { enterTransition },
         exitTransition = { exitTransition },
     ) {
-//        composable( Destinations.HOME ) { HomeScreen(navController) }
-
-//        composable(
-//            route = "${Destinations.DETAIL}/{movieCode}",
-//            arguments = listOf(navArgument("movieCode") { type = NavType.StringType })
-//        ) { backStackEntry ->
-//            val movieCode = backStackEntry.arguments?.getString("movieCode")
-//            movieCode.let {
-//                if (it != null) {
-//                    DetailScreen(code = it, navController = navController)
-//                }
-//            }
-//        }
 
         composable<Home> { HomeScreen(navController) }
 
@@ -101,38 +82,16 @@ fun NavGraph(
             )
         }
 
-//        composable( Destinations.LIBRARY ) { LibraryScreen(navController) }
-//        composable( Destinations.EXPLORE ) { ExploreScreen(navController) }
-//        composable( Destinations.HISTORY ) { HistoryScreen(navController) }
-        composable( Destinations.CATEGORY ) { CategoryScreen(navController) }
-//        composable( Destinations.MORE ) { MoreScreen(navController) }
         composable( Destinations.SEARCH ) { SearchScreen(navController) }
-//        composable( Destinations.SETTING ) { SettingScreen(navController) }
-//        composable( Destinations.GENERAL ) { GeneralScreen { navController.popBackStack() } }
-//        composable( Destinations.APPEARANCE ) { AppearanceScreen { navController.popBackStack() } }
-//        composable( Destinations.STORAGE ) { StorageScreen { navController.popBackStack() } }
-//        composable( Destinations.PRIVACY ) { PrivacyScreen { navController.popBackStack() } }
-//        composable( Destinations.ABOUT ) { AboutScreen { navController.popBackStack() } }
+        composable( Destinations.SETTING ) { SettingScreen(navController) }
         composable( Destinations.TAG ) { TagScreen(navController) }
     }
 }
 
 
 object Destinations {
-    const val HOME = "home"
-    const val DETAIL = "detail"
-    const val LIBRARY = "library"
-    const val EXPLORE = "explore"
-    const val HISTORY = "history"
-    const val CATEGORY = "category"
-    const val MORE = "more"
     const val SEARCH = "search"
-//    const val SETTING = "setting"
-//    const val GENERAL = "general"
-//    const val APPEARANCE = "appearance"
-//    const val STORAGE = "storage"
-//    const val PRIVACY = "privacy"
-//    const val ABOUT = "about"
+    const val SETTING = "setting"
     const val TAG = "tag"
 }
 
@@ -157,6 +116,3 @@ data class GenreRoute(val code: String, val name: String)
 
 @Serializable
 data class VideoRoute(val title: String, val url: String)
-
-@Serializable
-data class SettingRoute(val title: String, val navigateBack: () -> Unit)

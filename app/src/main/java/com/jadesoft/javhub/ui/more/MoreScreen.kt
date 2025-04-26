@@ -11,7 +11,6 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.ChildCare
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Settings
@@ -26,18 +25,14 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 
 @Composable
@@ -123,8 +118,7 @@ fun MoreScreen(
                 leadingContent = { Icon(Icons.Filled.Settings, contentDescription = "设置", tint = MaterialTheme.colorScheme.secondary) },
                 headlineContent = { Text("设置") },
                 modifier = Modifier.clickable {
-                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
-//                    navController.navigate("setting")
+                    navController.navigate("setting")
                 }
             )
             ListItem(
