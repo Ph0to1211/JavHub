@@ -21,16 +21,6 @@ class LibraryViewModel @Inject constructor(
     private val preferences: PreferencesManager
 ) : ViewModel() {
 
-//    private val _libraryState = MutableStateFlow(
-//        LibraryState(
-//            itemStyle = preferences.itemStyle,
-//            itemNum = preferences.itemNum,
-//            isBlurred = preferences.publicMode,
-//            tags = stringToList(preferences.userTags)
-//        )
-//    )
-//    val libraryState: StateFlow<LibraryState> = _libraryState
-
     private val _libraryState = MutableStateFlow(createLibraryState())
     val libraryState: StateFlow<LibraryState> = _libraryState
 

@@ -87,6 +87,9 @@ interface JavHubDao {
     @Query("DELETE FROM historyentity WHERE code = :code")
     suspend fun deleteHistory(code: String)
 
+    @Query("DELETE FROM historyentity")
+    suspend fun deleteAllHistory()
+
 
     /* ---------- SearchHistoryEntity ---------- */
     @Insert(onConflict = OnConflictStrategy.REPLACE)

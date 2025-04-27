@@ -60,6 +60,7 @@ fun SearchScreen(
     val onlyShowMag = searchState.value.onlyShowMag
     val selectedIndex = searchState.value.selectedIndex
     val movies = searchState.value.items
+    val actress = searchState.value.actress
     val page = searchState.value.pagination.page
     val isLoading = searchState.value.isLoading
     val hasMore = searchState.value.pagination.hasMore
@@ -190,6 +191,8 @@ fun SearchScreen(
                 )
                 SearchResultContent(
                     movies = movies,
+                    actress = actress,
+                    selectedIndex = selectedIndex,
                     page = page,
                     isLoading = isLoading,
                     hasMore = hasMore,

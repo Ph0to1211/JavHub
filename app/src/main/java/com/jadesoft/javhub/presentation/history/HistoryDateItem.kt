@@ -17,7 +17,7 @@ fun HistoryDateItem(date: String) {
         color = MaterialTheme.colorScheme.secondary,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(start = 10.dp, top = 12.dp, bottom = 4.dp),
         style = MaterialTheme.typography.titleMedium
     )
 }

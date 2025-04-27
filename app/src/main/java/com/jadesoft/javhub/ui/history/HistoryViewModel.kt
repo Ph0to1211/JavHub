@@ -35,6 +35,8 @@ class HistoryViewModel @Inject constructor(
     fun onEvent(event: HistoryEvent) {
         when(event) {
             is HistoryEvent.GetItems -> handleGetItems()
+            is HistoryEvent.DeleteAllHistory -> handleDeleteAllHistory()
+            is HistoryEvent.ToggleShowDialog -> handleToggleShowDialog()
             is HistoryEvent.DeleteHistory -> handleDeleteHistory(event.code)
         }
     }
@@ -50,6 +52,18 @@ class HistoryViewModel @Inject constructor(
                 count = items.size
             ) }
         }
+    }
+
+    private fun handleDeleteAllHistory() {
+        daoJob?.cancel()
+        daoJob = viewModelScope.launch {
+            repository.deleteAllHistory()
+            handleGetItems()
+        }
+    }
+
+    private fun handleToggleShowDialog() {
+        updateState { copy(showDialog = !showDialog) }
     }
 
     private fun handleDeleteHistory(code: String) {

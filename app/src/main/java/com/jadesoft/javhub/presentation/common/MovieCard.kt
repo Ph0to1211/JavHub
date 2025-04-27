@@ -2,6 +2,7 @@ package com.jadesoft.javhub.presentation.common
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -28,8 +29,8 @@ fun MovieCard(movie: Movie, isBlurred: Boolean, onClick: () -> Unit) {
     SharedTransitionLayout {
         Card(
             shape = RoundedCornerShape(6.dp),
+//            border = BorderStroke(3.dp, MaterialTheme.colorScheme.primary),
             modifier = Modifier
-                .padding(5.dp)
                 .fillMaxWidth()
                 .aspectRatio(0.7f)
         ) {

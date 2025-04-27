@@ -1,27 +1,27 @@
-package com.jadesoft.javhub.presentation.tag
+package com.jadesoft.javhub.presentation.history
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import com.jadesoft.javhub.ui.tag.TagEvent
+import com.jadesoft.javhub.ui.history.HistoryEvent
 
 @Composable
-fun TagDeleteDialog(
-    index: Int,
-    onDismiss: (TagEvent.DismissDialog) -> Unit,
-    onConfirm: (index: Int) -> Unit
+fun HistoryDialog(
+    onDismiss: (HistoryEvent.ToggleShowDialog) -> Unit,
+    onConfirm: (HistoryEvent.DeleteAllHistory) -> Unit
 ) {
     AlertDialog(
         onDismissRequest = {
-            onDismiss(TagEvent.DismissDialog)
+            onDismiss(HistoryEvent.ToggleShowDialog)
         },
         title = { Text("是否删除") },
         confirmButton = {
             Button(
                 onClick = {
-                    onConfirm(index)
+                    onConfirm(HistoryEvent.DeleteAllHistory)
+                    onDismiss(HistoryEvent.ToggleShowDialog)
                 }
             ) {
                 Text("确认")
@@ -29,7 +29,7 @@ fun TagDeleteDialog(
         },
         dismissButton = {
             TextButton(onClick = {
-                onDismiss(TagEvent.DismissDialog)
+                onDismiss(HistoryEvent.ToggleShowDialog)
             }) {
                 Text("取消")
             }

@@ -29,8 +29,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.jadesoft.javhub.data.model.Actress
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.navigation.MovieRoute
+import com.jadesoft.javhub.presentation.common.ActressList
 import com.jadesoft.javhub.presentation.common.CircularLoading
 import com.jadesoft.javhub.presentation.common.MovieCard
 import com.jadesoft.javhub.presentation.common.MovieList
@@ -41,6 +43,8 @@ import com.jadesoft.javhub.ui.search.SearchViewModel
 @Composable
 fun SearchResultContent(
     movies: List<Movie>,
+    actress: List<Actress>,
+    selectedIndex: Int,
     page: Int,
     isLoading: Boolean,
     hasMore: Boolean,
@@ -71,15 +75,25 @@ fun SearchResultContent(
     }
 
     if (page != 1) {
-        MovieList(
-            movies = movies,
-            isLoading =  isLoading,
-            navController = navController,
-            scrollState = scrollState,
-            itemStyle = itemStyle,
-            itemNum = itemNum,
-            isBlurred = isBlurred
-        )
+        if (selectedIndex != 2) {
+            MovieList(
+                movies = movies,
+                isLoading =  isLoading,
+                navController = navController,
+                scrollState = scrollState,
+                itemStyle = itemStyle,
+                itemNum = itemNum,
+                isBlurred = isBlurred
+            )
+        } else {
+            ActressList(
+                actresses = actress,
+                isLoading = isLoading,
+                censoredType = false,
+                scrollState = scrollState,
+                navController = navController
+            )
+        }
     } else {
         CircularLoading()
     }

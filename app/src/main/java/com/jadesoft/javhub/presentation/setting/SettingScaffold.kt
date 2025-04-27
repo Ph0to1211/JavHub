@@ -55,28 +55,28 @@ fun SettingScaffold(
                 icon = Icons.Outlined.Palette,
                 title = "外观",
                 description = "主题·颜色",
-                onClick = { navController.navigate("appearance") }
+                onClick = { navController.navigate(SettingRoutes.Appearance) }
             )
 
             SettingItem(
                 icon = Icons.Outlined.Storage,
                 title = "数据与存储",
                 description = "存储空间",
-                onClick = { navController.navigate("storage") }
+                onClick = { navController.navigate(SettingRoutes.Storage) }
             )
 
             SettingItem(
                 icon = Icons.Outlined.Lock,
                 title = "隐私",
                 description = "应用锁·隐私界面",
-                onClick = { navController.navigate("privacy") }
+                onClick = { navController.navigate(SettingRoutes.Privacy) }
             )
 
             SettingItem(
                 icon = Icons.Outlined.Info,
                 title = "关于",
                 description = "JavHub 0.99.0",
-                onClick = { navController.navigate("about") }
+                onClick = { navController.navigate(SettingRoutes.About) }
             )
         }
     }

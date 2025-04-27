@@ -2,6 +2,7 @@ package com.jadesoft.javhub.presentation.explore
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -72,8 +73,13 @@ fun ExploreMovieContent(
         if (movies.isNotEmpty()) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(if (!isList) itemNum else 1),
-                modifier = if (isList) Modifier.padding(top = 5.dp, bottom = 5.dp) else Modifier.padding(5.dp),
-                state = scrollState
+                state = scrollState,
+                contentPadding = PaddingValues(
+                    vertical = if (!isList) 10.dp else 5.dp,
+                    horizontal = if (!isList) 10.dp else 0.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(if (!isList) 10.dp else 0.dp),
+                horizontalArrangement = Arrangement.spacedBy(if (!isList) 10.dp else 0.dp)
             ) {
                 itemsIndexed(movies) { index, movie ->
                     key(index) {

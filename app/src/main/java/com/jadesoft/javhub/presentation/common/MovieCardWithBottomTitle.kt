@@ -28,9 +28,7 @@ import com.jadesoft.javhub.widget.MyAsyncImage
 fun MovieCardWithBottomTitle(movie: Movie, isBlurred: Boolean, onClick: () -> Unit) {
     SharedTransitionLayout {
         Column(
-            modifier = Modifier
-                .padding(5.dp)
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Card(
                 shape = RoundedCornerShape(6.dp),

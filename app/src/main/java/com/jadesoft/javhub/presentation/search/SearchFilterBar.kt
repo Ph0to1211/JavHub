@@ -37,7 +37,7 @@ fun SearchFilterBar(
                     },
                     label = { Text(item) },
                     selected = index == selectedIndex,
-                    enabled = index != 2
+                    enabled = true
                 )
             }
         }

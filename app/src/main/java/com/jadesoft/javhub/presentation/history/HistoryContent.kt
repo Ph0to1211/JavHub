@@ -1,14 +1,14 @@
 package com.jadesoft.javhub.presentation.history
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.jadesoft.javhub.data.model.History
-import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.navigation.MovieRoute
 import com.jadesoft.javhub.ui.history.HistoryEvent
 
@@ -17,9 +17,17 @@ fun HistoryContent(
     histories: List<History>,
     navController: NavController,
     isBlurred: Boolean,
-    onDelete: (HistoryEvent.DeleteHistory) -> Unit
+    showDialog: Boolean,
+    scrollState: LazyListState,
+    innerPadding: PaddingValues,
+    onDelete: (HistoryEvent.DeleteHistory) -> Unit,
+    onDeleteAll: (HistoryEvent.DeleteAllHistory) -> Unit,
+    onToggleShowDialog: (HistoryEvent.ToggleShowDialog) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(
+        state = scrollState,
+        modifier = Modifier.padding(innerPadding)
+    ) {
         items(histories) { item ->
             when (item) {
                 is History.DateItem -> HistoryDateItem(date = item.date)
@@ -37,5 +45,12 @@ fun HistoryContent(
                 )
             }
         }
+    }
+
+    if (showDialog) {
+        HistoryDialog(
+            onDismiss = onToggleShowDialog,
+            onConfirm = onDeleteAll
+        )
     }
 }

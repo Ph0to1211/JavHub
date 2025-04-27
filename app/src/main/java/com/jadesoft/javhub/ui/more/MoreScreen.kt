@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.jadesoft.javhub.presentation.more.MoreScaffold
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,97 +52,14 @@ fun MoreScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Text(
-                text = "ヾ(≧▽≦*)o",
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(60.dp).align(Alignment.CenterHorizontally),
-            )
-            HorizontalDivider()
-            ListItem(
-                leadingContent = { Icon(Icons.Filled.ChildCare, contentDescription = "公共模式", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("公共模式") },
-                supportingContent = { Text("在公共场合防止尴尬") },
-                trailingContent = { Switch(
-                    checked = isPublic,
-                    onCheckedChange = {
-                        moreViewModel.onEvent(MoreEvent.TogglePublicMode)
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar("重启后生效")
-                        }
-                    }
-                ) },
-                modifier = Modifier.clickable {  }
-            )
-            ListItem(
-                leadingContent = { Icon(Icons.Filled.RemoveRedEye, contentDescription = "无痕模式", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("无痕模式") },
-                supportingContent = { Text("暂停历史记录") },
-                trailingContent = { Switch(
-                    checked = isStealth,
-                    onCheckedChange = {
-                        moreViewModel.onEvent(MoreEvent.ToggleStealthMode)
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar("重启后生效")
-                        }
-                    }
-                ) },
-                modifier = Modifier.clickable {  }
-            )
-            HorizontalDivider()
-            ListItem(
-                leadingContent = { Icon(Icons.Filled.BookmarkBorder, contentDescription = "标签", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("标签") },
-                modifier = Modifier.clickable {
-                    navController.navigate("tag")
-                }
-            )
-            ListItem(
-                leadingContent = { Icon(Icons.Filled.BarChart, contentDescription = "统计", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("统计") },
-                modifier = Modifier.clickable {
-                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
-                }
-            )
-            ListItem(
-                leadingContent = { Icon(Icons.Filled.Storage, contentDescription = "数据与存储", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("数据与存储") },
-                modifier = Modifier.clickable {
-                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
-                }
-            )
-            HorizontalDivider()
-            ListItem(
-                leadingContent = { Icon(Icons.Filled.Settings, contentDescription = "设置", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("设置") },
-                modifier = Modifier.clickable {
-                    navController.navigate("setting")
-                }
-            )
-            ListItem(
-                leadingContent = { Icon(Icons.Filled.Info, contentDescription = "关于", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("关于") },
-                modifier = Modifier.clickable {
-                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
-                }
-            )
-            ListItem(
-                leadingContent = { Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "帮助", tint = MaterialTheme.colorScheme.secondary) },
-                headlineContent = { Text("帮助") },
-                modifier = Modifier.clickable {
-                    Toast.makeText(context, "尚在开发中", Toast.LENGTH_SHORT).show()
-                }
-            )
-        }
-
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        )
-    }
+    MoreScaffold(
+        context = context,
+        isPublic = isPublic,
+        isStealth = isStealth,
+        navController = navController,
+        coroutineScope = coroutineScope,
+        snackbarHostState = snackbarHostState,
+        onTogglePublicMode = moreViewModel::onEvent,
+        onToggleStealthMode = moreViewModel::onEvent
+    )
 }

@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jadesoft.javhub.navigation.Home
@@ -43,7 +44,11 @@ fun DetailTopAppBar(
         ),
         title = {
             if (isPullDown) {
-                Text(title)
+                Text(
+                    text = title,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         },
         navigationIcon = {

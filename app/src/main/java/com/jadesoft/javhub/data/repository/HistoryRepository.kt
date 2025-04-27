@@ -8,5 +8,7 @@ class HistoryRepository @Inject constructor(
 ){
     suspend fun getHistory() = dao.getHistories()
 
+    suspend fun deleteAllHistory() = dao.deleteAllHistory()
+
     suspend fun deleteHistory(code: String) = dao.deleteHistory(code)
 }

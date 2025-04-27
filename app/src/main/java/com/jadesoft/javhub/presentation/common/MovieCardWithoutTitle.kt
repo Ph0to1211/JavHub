@@ -23,7 +23,6 @@ fun MovieCardWithoutTitle(movie: Movie, isBlurred: Boolean, onClick: () -> Unit)
         Card(
             shape = RoundedCornerShape(6.dp),
             modifier = Modifier
-                .padding(5.dp)
                 .fillMaxWidth()
                 .aspectRatio(0.7f)
         ) {

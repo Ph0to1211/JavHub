@@ -1,11 +1,13 @@
 package com.jadesoft.javhub.ui.search
 
 import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
+import com.jadesoft.javhub.data.model.Actress
 import com.jadesoft.javhub.data.model.Movie
 
 data class SearchState(
     val showResult: Boolean = false,
     val items: List<Movie> = emptyList(),
+    val actress: List<Actress> = emptyList(),
     val isLoading: Boolean = false,
     val showUncensored: Boolean = false,
     val onlyShowMag: Boolean = false,

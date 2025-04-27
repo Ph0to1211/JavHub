@@ -22,26 +22,28 @@ import com.jadesoft.javhub.widget.MyAsyncImage
 @Composable
 fun ActressAvatar(
     actress: Actress,
-    size: Dp,
-    padding: Dp = 0.dp,
-    censoredType: Boolean,
+    size: Dp = 0.dp,
     onClick: (String, String, Boolean, ListType) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Card(
-            modifier = Modifier.size(size).padding(padding),
+            modifier = if (size != 0.dp) Modifier.size(size) else Modifier,
             shape = CircleShape,
         ) {
             MyAsyncImage(
                 imageUrl = actress.avatar,
                 modifier = Modifier.fillMaxSize().clickable {
-                    onClick(actress.code, actress.name, censoredType, ListType.Actress)
+                    onClick(actress.code, actress.name, actress.censored, ListType.Actress)
                 },
                 contentScale = ContentScale.Crop
             )
         }
-        Text(text = actress.name, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(8.dp))
+        Text(
+            text = actress.name,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(top = 6.dp)
+        )
     }
 }

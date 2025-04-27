@@ -36,7 +36,7 @@ class ExploreRepository @Inject constructor(
             val response = service.getAllActresses(currentGenre, page)
             if (response.isSuccessful) {
                 val html = response.body() ?: throw Exception("Empty response body")
-                val actresses = HtmlParser.parseActresses(html)
+                val actresses = HtmlParser.parseActresses(currentGenre == "", html)
                 actresses
             } else {
                 println("HTTP Error: ${response.code()}->${response.body()}")

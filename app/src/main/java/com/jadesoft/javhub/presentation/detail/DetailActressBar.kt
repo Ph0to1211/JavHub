@@ -38,7 +38,7 @@ fun DetailActressBar(
         modifier = Modifier.fillMaxWidth()
     ) {
         items(actresses) { actress ->
-            ActressAvatar(actress, 80.dp, 0.dp, censoredType, onClick)
+            ActressAvatar(actress, 80.dp, onClick)
         }
     }
 }

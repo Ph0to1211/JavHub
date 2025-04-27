@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.query
 import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
 import com.jadesoft.javhub.data.preferences.PreferencesManager
 import com.jadesoft.javhub.data.repository.SearchRepository
@@ -78,6 +79,7 @@ class SearchViewModel @Inject constructor(
             searchQuery = "",
             showResult = false,
             items = emptyList(),
+            actress = emptyList(),
             pagination = pagination.copy(page = 1, hasMore = true)
         ) }
         triggerRefreshFilter()
@@ -89,21 +91,36 @@ class SearchViewModel @Inject constructor(
         updateState { copy(isLoading = true) }
 
         loadJob = viewModelScope.launch {
-            val data = searchRepository.search(
-                query = _searchState.value.searchQuery,
-                showUncensored = _searchState.value.showUncensored,
-                onlyShowMag = _searchState.value.onlyShowMag,
-                page = _searchState.value.pagination.page,
-                type = _searchState.value.type
-            )
-            updateState { copy(
-                items = items + data,
-                pagination = pagination.copy(
-                    page = pagination.page + 1,
-                    hasMore = data.isNotEmpty()
-                ),
-                isLoading = false
-            ) }
+            if (_searchState.value.selectedIndex != 2) {
+                val data = searchRepository.search(
+                    query = _searchState.value.searchQuery,
+                    showUncensored = _searchState.value.showUncensored,
+                    onlyShowMag = _searchState.value.onlyShowMag,
+                    page = _searchState.value.pagination.page,
+                    type = _searchState.value.type
+                )
+                updateState { copy(
+                    items = items + data,
+                    pagination = pagination.copy(
+                        page = pagination.page + 1,
+                        hasMore = data.isNotEmpty()
+                    ),
+                    isLoading = false
+                ) }
+            } else {
+                val data = searchRepository.searchActress(
+                    query = _searchState.value.searchQuery,
+                    page = _searchState.value.pagination.page
+                )
+                updateState { copy(
+                    actress = actress + data,
+                    pagination = pagination.copy(
+                        page = pagination.page + 1,
+                        hasMore = actress.isNotEmpty()
+                    ),
+                    isLoading = false
+                ) }
+            }
         }
     }
 
@@ -146,6 +163,7 @@ class SearchViewModel @Inject constructor(
     private fun handleRefreshData() {
         updateState { copy(
             items = emptyList(),
+            actress = emptyList(),
             pagination = pagination.copy(page = 1, hasMore = true)
         ) }
         handleLoadItems()

@@ -47,6 +47,13 @@ interface ApiService {
         @Header("Cache-Control") cacheControl: String? = null
     ): Response<String>
 
+    @GET("searchstar/{query}/{page}")
+    suspend fun searchActress(
+        @Path("query") query: String,
+        @Path("page") page: Int,
+        @Header("Cache-Control") cacheControl: String? = null
+    ): Response<String>
+
     @GET("{code}")
     suspend fun getMovie(
         @Path("code") code: String,

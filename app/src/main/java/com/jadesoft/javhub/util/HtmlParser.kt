@@ -38,7 +38,7 @@ object HtmlParser {
         return movies
     }
 
-    fun parseActresses(html: String): List<Actress> {
+    fun parseActresses(censored: Boolean, html: String): List<Actress> {
         val document: Document = Jsoup.parse(html)
 
         val actresses = mutableListOf<Actress>()
@@ -57,7 +57,36 @@ object HtmlParser {
                 Actress(
                     code = code,
                     name = name,
-                    avatar = cover
+                    avatar = cover,
+                    censored = censored
+                )
+            )
+        }
+        return actresses
+    }
+
+    fun parseActressSearch(html: String): List<Actress> {
+        val document: Document = Jsoup.parse(html)
+
+        val actresses = mutableListOf<Actress>()
+
+        val elements = document.selectXpath("//div[@id='waterfall']//a")
+        for (ele in elements) {
+            val code = ele.attr("href").substringAfterLast("/")
+            val name = ele.selectXpath(".//span").text().substringBeforeLast(" ")
+            val censored = ele.selectXpath(".//button").text() == "有碼"
+            val coverOrigin = ele.selectXpath(".//img").attr("src")
+            val cover: String = if (coverOrigin.startsWith("https")) {
+                coverOrigin
+            } else {
+                "https://www.javbus.com$coverOrigin"
+            }
+            actresses.add(
+                Actress(
+                    code = code,
+                    name = name,
+                    avatar = cover,
+                    censored = censored
                 )
             )
         }
@@ -158,6 +187,7 @@ object HtmlParser {
             val genreName = ele.text()
             genres.add(Link(genreCode, genreName))
         }
+        val censored = genresElements[0].attr("href").contains("uncensored")
 
         val actressElements = document.selectXpath("//a[@class='avatar-box']")
         val actress = mutableListOf<Actress>()
@@ -174,7 +204,8 @@ object HtmlParser {
                 Actress(
                     code = actressCode,
                     name = actressName,
-                    avatar = actressAvatar
+                    avatar = actressAvatar,
+                    censored = !censored
                 )
             )
         }

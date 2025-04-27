@@ -20,7 +20,7 @@ class MovieRepository @Inject constructor(
             ListType.Actress -> "star"
             else -> ""
         }
-        val currentCensoredType = if (censoredType) "uncensored" else ""
+        val currentCensoredType = if (censoredType) "" else "uncensored"
         val cookie = if (onlyShowMag) "existmag=mag" else "existmag=all"
         return try {
             val response = service.getTypedMovies(
