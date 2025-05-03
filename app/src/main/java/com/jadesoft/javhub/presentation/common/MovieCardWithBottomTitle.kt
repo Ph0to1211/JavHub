@@ -2,7 +2,9 @@ package com.jadesoft.javhub.presentation.common
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -23,15 +25,26 @@ import androidx.compose.ui.unit.dp
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.widget.MyAsyncImage
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun MovieCardWithBottomTitle(movie: Movie, isBlurred: Boolean, onClick: () -> Unit) {
+fun MovieCardWithBottomTitle(
+    movie: Movie,
+    isBlurred: Boolean,
+    isSelected: Boolean = false,
+    onlySingleClick: Boolean = false,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
     SharedTransitionLayout {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
             Card(
                 shape = RoundedCornerShape(6.dp),
+                border = BorderStroke(
+                    width = 3.dp,
+                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                ),
                 modifier = Modifier
                     .aspectRatio(0.7f)
             ) {
@@ -39,11 +52,14 @@ fun MovieCardWithBottomTitle(movie: Movie, isBlurred: Boolean, onClick: () -> Un
                     MyAsyncImage(
                         imageUrl = movie.cover,
                         contentDescription = movie.title,
-                        modifier = Modifier
-                            .clickable { onClick() }
-                            .fillMaxSize(),
                         contentScale = ContentScale.Crop,
-                        isBlurred = isBlurred
+                        isBlurred = isBlurred,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .combinedClickable(
+                                onClick = if (onlySingleClick) onLongClick else onClick,
+                                onLongClick = onLongClick
+                            )
                     )
 
                     Text(

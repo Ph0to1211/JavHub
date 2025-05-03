@@ -7,4 +7,6 @@ class LibraryRepository @Inject constructor(
     private val dao: JavHubDao
 ) {
     suspend fun getAllMovies() = dao.getAllMovies()
+
+    suspend fun deleteMovies(list: List<String>) = dao.deleteMovies(list)
 }

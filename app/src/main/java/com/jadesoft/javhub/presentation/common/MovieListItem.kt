@@ -1,13 +1,15 @@
 package com.jadesoft.javhub.presentation.common
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -18,23 +20,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.widget.MyAsyncImage
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MovieListItem(movie: Movie, isBlurred: Boolean, onClick: () -> Unit) {
+fun MovieListItem(
+    movie: Movie,
+    isBlurred: Boolean,
+    isSelected: Boolean = false,
+    onlySingleClick: Boolean = false,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxSize()
             .clickable { onClick() }
-            .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp),
+            .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
+            .border(
+                BorderStroke(
+                    width = 3.dp,
+                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                )
+            )
     ) {
         Card(
             shape = RoundedCornerShape(6.dp),
@@ -45,9 +59,14 @@ fun MovieListItem(movie: Movie, isBlurred: Boolean, onClick: () -> Unit) {
             MyAsyncImage(
                 imageUrl = movie.cover,
                 contentDescription = movie.title,
-                modifier = Modifier.fillMaxSize().clickable { onClick() },
                 contentScale = ContentScale.Crop,
-                isBlurred = isBlurred
+                isBlurred = isBlurred,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .combinedClickable(
+                        onClick = if (onlySingleClick) onLongClick else onClick,
+                    onLongClick = onLongClick
+                ),
             )
         }
 

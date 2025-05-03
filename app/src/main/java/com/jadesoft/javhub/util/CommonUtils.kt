@@ -1,5 +1,14 @@
 package com.jadesoft.javhub.util
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -89,6 +98,30 @@ object CommonUtils {
         }
 
         checkNext() // 开始检查流程
+    }
+
+    @SuppressLint("ServiceCast")
+    @Composable
+    fun rememberVibrator(): Vibrator {
+        val context = LocalContext.current
+        return remember {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+        }
+    }
+
+    fun triggerVibration(vibrator: Vibrator, durationMillis: Long = 10) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(durationMillis, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(durationMillis)
+        }
     }
 
 }

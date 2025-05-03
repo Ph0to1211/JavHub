@@ -6,37 +6,46 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.jadesoft.javhub.data.model.Movie
+import com.jadesoft.javhub.ui.library.LibraryEvent
 import kotlinx.coroutines.CoroutineScope
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LibraryScaffold(
     movies: Map<String, List<Movie>>,
+    selectedMovies: Set<Movie>,
     scrollState: LazyGridState,
     navController: NavController,
     itemStyle: Int,
     itemNum: Int,
     isBlurred: Boolean,
     tags: List<String>,
+    showDialog: Boolean,
     pagerState: PagerState,
     coroutineScope: CoroutineScope,
+    onSelect: (Movie) -> Unit = {},
+    onUnSelect: (LibraryEvent.OnUnSelect) -> Unit,
+    onSelectAll: (LibraryEvent.OnSelectAll) -> Unit,
+    onToggleShowDialog: (LibraryEvent.OnToggleShowDialog) -> Unit,
+    onReverseSelect: (LibraryEvent.OnReverseSelect) -> Unit,
+    onUpdateCurrentMovies: (List<Movie>) -> Unit,
+    onDialogDismiss: (LibraryEvent.OnToggleShowDialog) -> Unit,
+    onDialogConfirm: (LibraryEvent.DeleteItems) -> Unit
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("书架") }
+            LibraryTopBar(
+                selectedItemCount = selectedMovies.size,
+                onUnSelect = onUnSelect,
+                onSelectAll = onSelectAll,
+                onReverseSelect = onReverseSelect,
+                onToggleShowDialog = onToggleShowDialog
             )
         },
         bottomBar = {
@@ -48,6 +57,7 @@ fun LibraryScaffold(
             ) {
                 LibraryContent(
                     movies = movies,
+                    selectedMovies = selectedMovies,
                     scrollState = scrollState,
                     navController = navController,
                     itemStyle = itemStyle,
@@ -55,7 +65,16 @@ fun LibraryScaffold(
                     isBlurred = isBlurred,
                     tags = tags,
                     pagerState = pagerState,
-                    coroutineScope = coroutineScope
+                    coroutineScope = coroutineScope,
+                    onSelect = onSelect,
+                    onUpdateCurrentMovies = onUpdateCurrentMovies
+                )
+            }
+
+            if (showDialog) {
+                LibraryDeleteDialog(
+                    onDismiss = onDialogDismiss,
+                    onConfirm = onDialogConfirm
                 )
             }
         }

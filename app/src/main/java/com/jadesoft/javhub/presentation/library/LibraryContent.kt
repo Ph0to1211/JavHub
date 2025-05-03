@@ -1,33 +1,30 @@
 package com.jadesoft.javhub.presentation.library
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.jadesoft.javhub.data.db.dto.MovieEntity
 import com.jadesoft.javhub.data.model.Movie
-import com.jadesoft.javhub.presentation.common.MovieList
+import com.jadesoft.javhub.presentation.common.SelectedMovieList
+import com.jadesoft.javhub.util.CommonUtils.rememberVibrator
+import com.jadesoft.javhub.util.CommonUtils.triggerVibration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryContent(
     movies: Map<String, List<Movie>>,
+    selectedMovies: Set<Movie>,
     scrollState: LazyGridState,
     navController: NavController,
     itemStyle: Int,
@@ -35,8 +32,16 @@ fun LibraryContent(
     isBlurred: Boolean,
     tags: List<String>,
     pagerState: PagerState,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
+    onSelect: (Movie) -> Unit = {},
+    onUpdateCurrentMovies: (List<Movie>) -> Unit
 ) {
+    val vibrator = rememberVibrator()
+    val wrappedOnSelect = { movie: Movie ->
+        triggerVibration(vibrator)
+        onSelect(movie)
+    }
+
     Column(Modifier.fillMaxSize()) {
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
@@ -64,18 +69,21 @@ fun LibraryContent(
         ) { page ->
             val currentTag = tags.getOrNull(page) ?: ""
             val currentMovies = movies[currentTag] ?: emptyList()
+            onUpdateCurrentMovies(currentMovies)
 
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                MovieList(
+                SelectedMovieList(
                     movies = currentMovies,
                     isLoading = false,
                     scrollState = scrollState,
                     navController = navController,
                     itemStyle = itemStyle,
                     itemNum = itemNum,
-                    isBlurred = isBlurred
+                    isBlurred = isBlurred,
+                    onLongClickMovie = wrappedOnSelect,
+                    selectedMovies = selectedMovies
                 )
             }
         }

@@ -20,11 +20,13 @@ fun LibraryScreen(
 
     val libraryState = libraryViewModel.libraryState.collectAsState()
     val movies = libraryState.value.movies
+    val selectedMovies = libraryState.value.selectedMovies
 
     val itemStyle = libraryState.value.itemStyle
     val itemNum = libraryState.value.itemNum
     val isBlurred = libraryState.value.isBlurred
     val tags = libraryState.value.tags
+    val showDialog = libraryState.value.showDialog
 
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { tags.size })
     val coroutineScope = rememberCoroutineScope()
@@ -36,14 +38,28 @@ fun LibraryScreen(
 
     LibraryScaffold(
         movies = movies,
+        selectedMovies = selectedMovies,
         scrollState = scrollState,
         navController = navController,
         itemStyle = itemStyle,
         itemNum = itemNum,
         isBlurred = isBlurred,
         tags = tags,
+        showDialog = showDialog,
         pagerState = pagerState,
         coroutineScope = coroutineScope,
+        onSelect = { movie ->
+            libraryViewModel.onEvent(LibraryEvent.OnSelect(movie))
+        },
+        onUnSelect = libraryViewModel::onEvent,
+        onSelectAll = libraryViewModel::onEvent,
+        onToggleShowDialog = libraryViewModel::onEvent,
+        onReverseSelect = libraryViewModel::onEvent,
+        onUpdateCurrentMovies = { currentMovies ->
+            libraryViewModel.updateCurrentMovies(currentMovies)
+        },
+        onDialogDismiss = libraryViewModel::onEvent,
+        onDialogConfirm = libraryViewModel::onEvent,
     )
 
 }

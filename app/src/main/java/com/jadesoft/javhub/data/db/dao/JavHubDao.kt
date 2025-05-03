@@ -1,6 +1,5 @@
 package com.jadesoft.javhub.data.db.dao
 
-import androidx.annotation.NonNull
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -37,6 +36,9 @@ interface JavHubDao {
 
     @Query("DELETE FROM movieentity WHERE code = :code")
     suspend fun deleteMovieByCode(code: String)
+
+    @Query("DELETE FROM movieentity WHERE code IN (:list)")
+    suspend fun deleteMovies(list: List<String>)
 
     @Query("SELECT EXISTS(SELECT 1 FROM movieentity WHERE code = :code LIMIT 1)")
     suspend fun isMovieExists(code: String): Boolean

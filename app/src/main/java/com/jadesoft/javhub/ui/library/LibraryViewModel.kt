@@ -51,10 +51,16 @@ class LibraryViewModel @Inject constructor(
     fun onEvent(event: LibraryEvent) {
         when(event) {
             is LibraryEvent.LoadItems -> handleLoadItems()
+            is LibraryEvent.DeleteItems -> handleDeleteItems()
+            is LibraryEvent.OnSelect -> handleSelect(event.movie)
+            is LibraryEvent.OnUnSelect -> handleUnSelect()
+            is LibraryEvent.OnSelectAll -> handleSelectAll()
+            is LibraryEvent.OnReverseSelect -> handleReverseSelect()
+            is LibraryEvent.OnToggleShowDialog -> handleToggleShowDialog()
         }
     }
 
-    fun handleLoadItems() {
+    private fun handleLoadItems() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             val items = repository.getAllMovies()
@@ -63,6 +69,61 @@ class LibraryViewModel @Inject constructor(
                 count = items.size
             ) }
         }
+    }
+
+    private fun handleDeleteItems() {
+        viewModelScope.launch {
+            val list = _libraryState.value.selectedMovies.map { it.code }
+            repository.deleteMovies(list)
+            handleLoadItems()
+            handleUnSelect()
+        }
+    }
+
+    private fun handleSelect(movie: Movie) {
+        updateState { copy(
+            selectedMovies = if (selectedMovies.contains(movie)) {
+                selectedMovies - movie
+            } else {
+                selectedMovies + movie
+            }
+        ) }
+    }
+
+    private fun handleUnSelect() {
+        updateState { copy(
+            selectedMovies = emptySet()
+        ) }
+    }
+
+    private fun handleSelectAll() {
+        updateState { copy(
+            selectedMovies = selectedMovies + currentMovies
+        ) }
+    }
+
+
+    private fun handleReverseSelect() {
+        updateState {
+            val currentPageSet = currentMovies.toSet()
+            val newSelected = selectedMovies
+                .minus(currentPageSet)
+                .union(currentPageSet.minus(selectedMovies))
+
+            copy(selectedMovies = newSelected)
+        }
+    }
+
+    private fun handleToggleShowDialog() {
+        updateState { copy(
+            showDialog = !showDialog
+        ) }
+    }
+
+    fun updateCurrentMovies(movies: List<Movie>) {
+        updateState { copy(
+            currentMovies = movies
+        ) }
     }
 
     private inline fun updateState(transform: LibraryState.() -> LibraryState) {

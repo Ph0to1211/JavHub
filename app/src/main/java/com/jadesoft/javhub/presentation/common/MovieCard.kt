@@ -3,7 +3,8 @@ package com.jadesoft.javhub.presentation.common
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,13 +24,23 @@ import androidx.compose.ui.unit.dp
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.widget.MyAsyncImage
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun MovieCard(movie: Movie, isBlurred: Boolean, onClick: () -> Unit) {
+fun MovieCard(
+    movie: Movie,
+    isBlurred: Boolean,
+    isSelected: Boolean = false,
+    onlySingleClick: Boolean = false,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
     SharedTransitionLayout {
         Card(
             shape = RoundedCornerShape(6.dp),
-//            border = BorderStroke(3.dp, MaterialTheme.colorScheme.primary),
+            border = BorderStroke(
+                width = 3.dp,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(0.7f)
@@ -38,15 +49,18 @@ fun MovieCard(movie: Movie, isBlurred: Boolean, onClick: () -> Unit) {
                 MyAsyncImage(
                     imageUrl = movie.cover,
                     contentDescription = movie.title,
+                    contentScale = ContentScale.Crop,
+                    isBlurred = isBlurred,
                     modifier = Modifier
 //                        .sharedElement(
 //                            rememberSharedContentState(key = "image-$key"),
 //                            animatedVisibilityScope = AnimatedContentScope
 //                        )
-                        .clickable { onClick() }
-                        .fillMaxSize(),
-                    contentScale = ContentScale.Crop,
-                    isBlurred = isBlurred
+                        .combinedClickable(
+                            onClick = if (onlySingleClick) onLongClick else onClick,
+                            onLongClick = onLongClick
+                        )
+                        .fillMaxSize()
                 )
 
                 Text(
