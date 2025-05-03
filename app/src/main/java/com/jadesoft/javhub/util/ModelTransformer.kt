@@ -6,8 +6,9 @@ import com.jadesoft.javhub.data.model.Movie
 
 fun MovieEntity.toModel(): Movie = Movie(
     code = this.code,
+    censored = this.censored,
     title = this.title,
-    cover = this.cover
+    cover = this.cover,
 )
 
 fun Movie.toEntity(tag: String, cover: String, createDate: String): MovieEntity = MovieEntity(
@@ -16,13 +17,15 @@ fun Movie.toEntity(tag: String, cover: String, createDate: String): MovieEntity 
     code = this.code,
     title = this.title,
     cover = cover,
-    createDate = createDate
+    createDate = createDate,
+    censored = this.censored
 )
 
 fun HistoryEntity.toModel(): Movie = Movie(
     code = this.code,
     title = this.title,
-    cover = this.cover
+    cover = this.cover,
+    censored = this.censored
 )
 
 fun Movie.toHistoryEntity(cover: String, createDate: String): HistoryEntity = HistoryEntity(
@@ -30,5 +33,6 @@ fun Movie.toHistoryEntity(cover: String, createDate: String): HistoryEntity = Hi
     code = this.code,
     title = this.title,
     cover = cover,
-    createDate = createDate
+    createDate = createDate,
+    censored = this.censored
 )

@@ -32,7 +32,7 @@ class MovieRepository @Inject constructor(
             )
             if (response.isSuccessful) {
                 val html = response.body() ?: throw Exception("Empty response body")
-                val movies = HtmlParser.parserMovies(html)
+                val movies = HtmlParser.parserMovies(html, censoredType)
                 movies
             } else {
                 println("HTTP Error: ${response.code()}->${response.body()}")

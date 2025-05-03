@@ -6,5 +6,5 @@ data class Movie(
     @SerializedName("code") val code: String,
     @SerializedName("title") val title: String,
     @SerializedName("cover") val cover: String,
-//    @SerializedName("url") val url: String
+    @SerializedName("censored") val censored: Boolean,
 )

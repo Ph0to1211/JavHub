@@ -24,6 +24,7 @@ class DetailRepository @Inject constructor(
                 println("HTTP Error: ${response.code()}->${response.body()}")
                 MovieDetail(
                     code = "",
+                    censored = true,
                     title = "",
                     bigCover = "",
                     publishDate = "",
@@ -34,6 +35,7 @@ class DetailRepository @Inject constructor(
             println("HTTP Error: $e")
             MovieDetail(
                 code = "",
+                censored = true,
                 title = "",
                 bigCover = "",
                 publishDate = "",

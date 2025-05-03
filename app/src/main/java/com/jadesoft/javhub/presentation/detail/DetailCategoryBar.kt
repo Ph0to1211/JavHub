@@ -17,6 +17,7 @@ import com.jadesoft.javhub.ui.movie.ListType
 @Composable
 fun DetailCategoryBar(
     categories: List<Link>,
+    censored: Boolean,
     onClick: (String, String, Boolean, ListType) -> Unit
 ) {
     FlowRow(
@@ -25,7 +26,7 @@ fun DetailCategoryBar(
     ) {
         categories.forEach { item ->
             SuggestionChip(
-                onClick = { onClick(item.code, item.name, false, ListType.Genre) },
+                onClick = { onClick(item.code, item.name, censored, ListType.Genre) },
                 label = {
                     Text(item.name, style = MaterialTheme.typography.bodySmall)
                 },

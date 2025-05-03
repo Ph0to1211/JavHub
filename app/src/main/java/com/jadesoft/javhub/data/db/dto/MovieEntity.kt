@@ -11,5 +11,6 @@ data class MovieEntity(
     val code: String,
     val title: String,
     val cover: String,
-    val createDate: String
+    val createDate: String,
+    val censored: Boolean
 )

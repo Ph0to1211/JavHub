@@ -18,7 +18,7 @@ class ExploreRepository @Inject constructor(
             val response = service.getAllMovies(currentGenre, page, cookie, cacheControl)
             if (response.isSuccessful) {
                 val html = response.body() ?: throw Exception("Empty response body")
-                val movies = HtmlParser.parserMovies(html)
+                val movies = HtmlParser.parserMovies(html, !showUncensored)
                 movies
             } else {
                 println("HTTP Error: ${response.code()}->${response.body()}")
@@ -55,7 +55,7 @@ class ExploreRepository @Inject constructor(
             val response = service.getFilteredMovie(currentType, code, page, cookie)
             if (response.isSuccessful) {
                 val html = response.body() ?: throw Exception("Empty response body")
-                val movies = HtmlParser.parserMovies(html)
+                val movies = HtmlParser.parserMovies(html, !type)
                 movies
             } else {
                 println("HTTP Error: ${response.code()}->${response.body()}")

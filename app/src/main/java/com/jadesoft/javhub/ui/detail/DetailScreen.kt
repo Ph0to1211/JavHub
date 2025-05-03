@@ -157,6 +157,7 @@ fun DetailScreen(
                     DetailListTile("分类")
                     movie.genres?.let { DetailCategoryBar(
                         categories = it,
+                        censored = movie.censored,
                         onClick = { code, name, censoredType, listType ->
                             navController.navigate(
                                 route = TypedMovieRoute(

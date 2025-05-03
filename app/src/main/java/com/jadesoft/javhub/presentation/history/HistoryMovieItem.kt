@@ -46,7 +46,7 @@ fun HistoryMovieItem(
         Card(
             shape = RoundedCornerShape(6.dp),
             modifier = Modifier
-                .width(90.dp)
+                .width(70.dp)
                 .aspectRatio(0.7f)
         ) {
             MyAsyncImage(

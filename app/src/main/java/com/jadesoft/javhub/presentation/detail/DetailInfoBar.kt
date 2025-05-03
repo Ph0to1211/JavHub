@@ -30,16 +30,16 @@ fun DetailInfoBar(
         DetailTextRow(label = "发布日期", value = info.publishDate)
         DetailTextRow(label = "长度", value = info.duration)
         if ((info.director?.code ?: "") != "") {
-            info.director?.let { DetailButtonRow(label = "导演", value = it.name, code = it.code, onClick = onClick) }
+            info.director?.let { DetailButtonRow(label = "导演", value = it.name, code = it.code, censored = info.censored, onClick = onClick) }
         }
         if ((info.producer?.code ?: "") != "") {
-            info.producer?.let { DetailButtonRow(label = "制作商", value = it.name, code = it.code, onClick = onClick) }
+            info.producer?.let { DetailButtonRow(label = "制作商", value = it.name, code = it.code, censored = info.censored, onClick = onClick) }
         }
         if ((info.publisher?.code ?: "") != "") {
-            info.publisher?.let { DetailButtonRow(label = "发行商", value = it.name, code = it.code, onClick = onClick) }
+            info.publisher?.let { DetailButtonRow(label = "发行商", value = it.name, code = it.code, censored = info.censored, onClick = onClick) }
         }
         if ((info.series?.code ?: "") != "") {
-            info.series?.let { DetailButtonRow(label = "系列", value = it.name, code = it.code, onClick = onClick) }
+            info.series?.let { DetailButtonRow(label = "系列", value = it.name, code = it.code, censored = info.censored, onClick = onClick) }
         }
     }
 }
@@ -57,6 +57,7 @@ fun DetailButtonRow(
     label: String,
     value: String,
     code: String,
+    censored: Boolean,
     onClick: (String, String, Boolean, ListType) -> Unit
 ){
     val listType = when (label) {
@@ -73,7 +74,7 @@ fun DetailButtonRow(
             color = MaterialTheme.colorScheme.primary,
             textDecoration = TextDecoration.Underline,
             modifier = Modifier.weight(3f).clickable {
-                onClick(code, value, false, listType)
+                onClick(code, value, censored, listType)
             }
         )
     }

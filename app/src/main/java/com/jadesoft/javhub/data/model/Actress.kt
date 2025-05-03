@@ -8,7 +8,7 @@ data class Actress(
     @SerialName("code") val code: String,
     @SerialName("name") val name: String,
     @SerialName("avatar") val avatar: String,
-    @SerialName("censored") val censored: Boolean = true,
+    @SerialName("censored") val censored: Boolean,
     @SerialName("birthday") val birthday: String = "",
     @SerialName("age") val age: String = "",
     @SerialName("height") val height: String = "",

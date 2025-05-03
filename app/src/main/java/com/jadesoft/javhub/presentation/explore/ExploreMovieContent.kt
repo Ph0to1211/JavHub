@@ -84,20 +84,44 @@ fun ExploreMovieContent(
                 itemsIndexed(movies) { index, movie ->
                     key(index) {
                         if (isList) {
-                            MovieListItem(movie = movie, isBlurred = isBlurred, onClick = {
-                                navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
-                            })
+                            MovieListItem(
+                                movie = movie,
+                                isBlurred = isBlurred,
+                                isSelected = false,
+                                onClick = {
+                                    navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
+                                },
+                                onLongClick = {  }
+                            )
                         } else {
-                            when(itemStyle) {
-                                0 -> MovieCard(movie = movie, isBlurred = isBlurred, onClick = {
-                                    navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
-                                })
-                                1 -> MovieCardWithBottomTitle(movie = movie, isBlurred = isBlurred, onClick = {
-                                    navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
-                                })
-                                2 -> MovieCardWithoutTitle(movie = movie, isBlurred = isBlurred, onClick = {
-                                    navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
-                                })
+                            when (itemStyle) {
+                                0 -> MovieCard(
+                                    movie = movie,
+                                    isBlurred = isBlurred,
+                                    isSelected = false,
+                                    onClick = {
+                                        navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
+                                    },
+                                    onLongClick = {  }
+                                )
+                                1 -> MovieCardWithBottomTitle(
+                                    movie = movie,
+                                    isBlurred = isBlurred,
+                                    isSelected = false,
+                                    onClick = {
+                                        navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
+                                    },
+                                    onLongClick = {  }
+                                )
+                                2 -> MovieCardWithoutTitle(
+                                    movie = movie,
+                                    isBlurred = isBlurred,
+                                    isSelected = false,
+                                    onClick = {
+                                        navController.navigate(MovieRoute(movie.code, movie.cover, movie.title))
+                                    },
+                                    onLongClick = {  }
+                                )
                             }
                         }
                     }

@@ -5,7 +5,7 @@ import com.jadesoft.javhub.data.model.Movie
 
 data class MovieState(
     val items: List<Movie> = emptyList(),
-    val actress: Actress = Actress("", "", ""),
+    val actress: Actress = Actress("", "", "", censored = true),
     val isLoading: Boolean = false,
     val showUncensored: Boolean = false,
     val onlyShowMag: Boolean = false,

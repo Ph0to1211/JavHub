@@ -9,7 +9,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 object HtmlParser {
-    fun parserMovies(html: String): List<Movie> {
+    fun parserMovies(html: String, censored: Boolean): List<Movie> {
         val document: Document = Jsoup.parse(html)
 
         val movies = mutableListOf<Movie>()
@@ -18,7 +18,6 @@ object HtmlParser {
         for (ele in elements) {
             val code = ele.selectXpath(".//date[1]").text()
             val title = ele.selectXpath(".//img").attr("title")
-            val url = ele.attr("href")
             val coverOrigin = ele.selectXpath(".//img").attr("src")
             val cover: String = if (coverOrigin.startsWith("https")) {
                 coverOrigin
@@ -30,8 +29,8 @@ object HtmlParser {
                 Movie(
                     code = code,
                     title = title,
-//                    url = url,
-                    cover = cover
+                    cover = cover,
+                    censored = censored
                 )
             )
         }
@@ -93,7 +92,7 @@ object HtmlParser {
         return actresses
     }
 
-    fun parseActressDetail(html: String): Actress {
+    fun parseActressDetail(html: String, censored: Boolean): Actress {
         val document: Document = Jsoup.parse(html)
 
         val div = document.selectXpath("//div[@class='avatar-box']")
@@ -124,6 +123,7 @@ object HtmlParser {
         }
         val actressDetail = Actress(
             code = code,
+            censored = censored,
             name = name,
             avatar = avatar,
             birthday = birthday,
@@ -187,7 +187,7 @@ object HtmlParser {
             val genreName = ele.text()
             genres.add(Link(genreCode, genreName))
         }
-        val censored = genresElements[0].attr("href").contains("uncensored")
+        val censored = !genresElements[0].attr("href").contains("uncensored")
 
         val actressElements = document.selectXpath("//a[@class='avatar-box']")
         val actress = mutableListOf<Actress>()
@@ -205,7 +205,7 @@ object HtmlParser {
                     code = actressCode,
                     name = actressName,
                     avatar = actressAvatar,
-                    censored = !censored
+                    censored = censored
                 )
             )
         }
@@ -236,13 +236,14 @@ object HtmlParser {
                     code = ele.attr("href").substringAfterLast("/"),
                     title = ele.attr("title"),
                     cover = cover,
-//                    url = ele.attr("href")
+                    censored = censored
                 )
             )
         }
 
         return MovieDetail(
             code = code,
+            censored = censored,
             title = title,
             bigCover = bigCover,
             publishDate = publishDate,

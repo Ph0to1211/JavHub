@@ -94,6 +94,7 @@ class HistoryViewModel @Inject constructor(
                     History.MovieItem(
                         movie = Movie(
                             code = entity.code,
+                            censored = entity.censored,
                             title = entity.title,
                             cover = entity.cover,
                         ),

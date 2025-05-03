@@ -116,6 +116,7 @@ class DetailViewModel @Inject constructor(
             val tag = listToString(tags)
             val movie: MovieEntity = Movie(
                 code = _detailState.value.movie?.code ?: "",
+                censored = _detailState.value.movie?.censored ?: true,
                 title = _detailState.value.movie?.title ?: "",
                 cover = _detailState.value.movie?.bigCover ?: "",
             ).toEntity(tag = tag, cover = cover, createDate = createDate)
@@ -146,6 +147,7 @@ class DetailViewModel @Inject constructor(
             val createDate =  current.format(formatter)
             val movie: HistoryEntity = Movie(
                 code = _detailState.value.movie?.code ?: "",
+                censored = _detailState.value.movie?.censored ?: true,
                 title = _detailState.value.movie?.title ?: "",
                 cover = _detailState.value.movie?.bigCover ?: "",
             ).toHistoryEntity(cover, createDate)
