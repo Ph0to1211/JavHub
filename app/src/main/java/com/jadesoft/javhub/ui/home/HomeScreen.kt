@@ -76,7 +76,7 @@ fun HomeScreen(
     }
 
     val bottomBarRoute = listOf(
-        BottomBarRoute("书架", "library", Icons.Filled.Bookmarks, Icons.Outlined.Bookmarks),
+        BottomBarRoute("收藏", "library", Icons.Filled.Bookmarks, Icons.Outlined.Bookmarks),
         BottomBarRoute("发现", "explore", Icons.Filled.Explore, Icons.Outlined.Explore),
         BottomBarRoute("历史", "history", Icons.Filled.History, Icons.Outlined.History),
 //        BottomBarRoute("更多", "more", Icons.Filled.MoreHoriz, Icons.Outlined.MoreHoriz)

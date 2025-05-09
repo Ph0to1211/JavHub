@@ -37,7 +37,7 @@ fun LibraryTopBar(
             if (hasSelectedItem) {
                 Text(selectedItemCount.toString())
             } else {
-                Text("书架")
+                Text("收藏")
             }
         },
         navigationIcon = {
