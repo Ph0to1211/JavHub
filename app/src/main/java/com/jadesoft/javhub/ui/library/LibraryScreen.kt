@@ -60,6 +60,7 @@ fun LibraryScreen(
         },
         onDialogDismiss = libraryViewModel::onEvent,
         onDialogConfirm = libraryViewModel::onEvent,
+        onToggleDrawerOpen = libraryViewModel::onEvent
     )
 
 }

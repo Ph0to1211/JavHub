@@ -10,4 +10,5 @@ sealed class LibraryEvent {
     object OnReverseSelect : LibraryEvent()
     data class OnSelect(val movie: Movie) : LibraryEvent()
     object OnToggleShowDialog : LibraryEvent()
+    object OnToggleDrawerOpen : LibraryEvent()
 }

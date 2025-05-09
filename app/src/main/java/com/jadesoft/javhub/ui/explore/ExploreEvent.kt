@@ -13,6 +13,7 @@ sealed class ExploreEvent {
     object ToggleMag : ExploreEvent()
     data class ToggleExploreType(val enabled: Boolean) : ExploreEvent()
     object ToggleMenu : ExploreEvent()
+    object ToggleDrawerShow : ExploreEvent()
     object RefreshData : ExploreEvent()
     object ScrollToTop : ExploreEvent()
     object LoadItems : ExploreEvent()

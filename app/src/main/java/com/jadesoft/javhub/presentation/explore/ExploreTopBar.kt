@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -33,6 +34,7 @@ fun ExploreTopBar(
     onToggleMenu: (ExploreEvent.ToggleMenu) -> Unit,
     onToggleExploreType: (ExploreEvent.ToggleExploreType) -> Unit,
     onToggleFilter: (ExploreEvent.ToggleFilter) -> Unit,
+    onToggleDrawerOpen: (ExploreEvent.ToggleDrawerShow) -> Unit,
     navigateToSearch: () -> Unit
 ) {
     TopAppBar(
@@ -73,6 +75,13 @@ fun ExploreTopBar(
                         }
                     )
                 }
+            }
+        },
+        navigationIcon = {
+            IconButton(
+                onClick = { onToggleDrawerOpen(ExploreEvent.ToggleDrawerShow) }
+            ) {
+                Icon(Icons.Default.Menu, "Drawer menu")
             }
         },
         actions = {

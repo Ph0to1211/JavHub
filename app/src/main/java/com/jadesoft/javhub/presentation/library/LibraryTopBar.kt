@@ -3,6 +3,7 @@ package com.jadesoft.javhub.presentation.library
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material.icons.outlined.TabUnselected
@@ -15,6 +16,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.jadesoft.javhub.ui.library.LibraryEvent
 
@@ -26,7 +28,9 @@ fun LibraryTopBar(
     onSelectAll: (LibraryEvent.OnSelectAll) -> Unit,
     onReverseSelect: (LibraryEvent.OnReverseSelect) -> Unit,
     onToggleShowDialog: (LibraryEvent.OnToggleShowDialog) -> Unit,
+    onToggleDrawerOpen: (LibraryEvent.OnToggleDrawerOpen) -> Unit
 ) {
+    val context = LocalContext.current
     val hasSelectedItem = selectedItemCount > 0
     TopAppBar(
         title = {
@@ -42,6 +46,12 @@ fun LibraryTopBar(
                     onClick = { onUnSelect(LibraryEvent.OnUnSelect) }
                 ) {
                     Icon(Icons.Default.Clear, "clear")
+                }
+            } else {
+                IconButton(
+                    onClick = { onToggleDrawerOpen(LibraryEvent.OnToggleDrawerOpen) }
+                ) {
+                    Icon(Icons.Default.Menu, "Drawer menu")
                 }
             }
         },
@@ -73,6 +83,15 @@ fun LibraryTopBar(
                     ) {
                         Icon(Icons.Outlined.TabUnselected, "reverse select")
                     }
+                } else {
+//                    IconButton(
+//                        onClick = {
+//                            Intent(context, CountdownService::class.java).also {
+//                            ContextCompat.startForegroundService(context, it)
+//                        }}
+//                    ) {
+//                        Icon(Icons.Outlined.NotStarted, "")
+//                    }
                 }
             }
         }

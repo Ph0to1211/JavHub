@@ -2,10 +2,9 @@ package com.jadesoft.javhub.data.di
 
 import android.content.Context
 import com.jadesoft.javhub.data.api.ApiService
-import com.jadesoft.javhub.data.db.dao.JavHubDao
 import com.jadesoft.javhub.data.preferences.PreferencesManager
-import com.jadesoft.javhub.data.repository.DetailRepository
 import com.jadesoft.javhub.data.repository.ExploreRepository
+import com.jadesoft.javhub.data.repository.HomeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +26,12 @@ object AppModule {
     @Singleton
     fun provideFrontRepository(service: ApiService): ExploreRepository {
         return ExploreRepository(service)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHomeRepository(): HomeRepository {
+        return HomeRepository()
     }
 
 //    @Provides

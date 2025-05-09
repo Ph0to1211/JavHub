@@ -7,7 +7,7 @@ import com.jadesoft.javhub.data.model.History
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.data.preferences.PreferencesManager
 import com.jadesoft.javhub.data.repository.HistoryRepository
-import com.jadesoft.javhub.util.toModel
+import com.jadesoft.javhub.data.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val repository: HistoryRepository,
+    private val homeRepository: HomeRepository,
     private val preferences: PreferencesManager
 ): ViewModel() {
 
@@ -37,6 +38,7 @@ class HistoryViewModel @Inject constructor(
             is HistoryEvent.GetItems -> handleGetItems()
             is HistoryEvent.DeleteAllHistory -> handleDeleteAllHistory()
             is HistoryEvent.ToggleShowDialog -> handleToggleShowDialog()
+            is HistoryEvent.ToggleDrawerOpen -> handleToggleDrawerOpen()
             is HistoryEvent.DeleteHistory -> handleDeleteHistory(event.code)
         }
     }
@@ -64,6 +66,10 @@ class HistoryViewModel @Inject constructor(
 
     private fun handleToggleShowDialog() {
         updateState { copy(showDialog = !showDialog) }
+    }
+
+    private fun handleToggleDrawerOpen() {
+        homeRepository.toggleDrawerOpen()
     }
 
     private fun handleDeleteHistory(code: String) {

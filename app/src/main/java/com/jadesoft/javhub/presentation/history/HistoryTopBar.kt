@@ -2,6 +2,7 @@ package com.jadesoft.javhub.presentation.history
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,10 +21,18 @@ import com.jadesoft.javhub.ui.history.HistoryEvent
 fun HistoryTopBar(
     hasHistories: Boolean,
     isScrolled: Boolean,
-    onToggleShowDialog: (HistoryEvent.ToggleShowDialog) -> Unit
+    onToggleShowDialog: (HistoryEvent.ToggleShowDialog) -> Unit,
+    onToggleDrawerOpen: (HistoryEvent.ToggleDrawerOpen) -> Unit
 ) {
     TopAppBar(
         title = { Text("历史") },
+        navigationIcon = {
+            IconButton(
+                onClick = { onToggleDrawerOpen(HistoryEvent.ToggleDrawerOpen) }
+            ) {
+                Icon(Icons.Default.Menu, "Drawer menu")
+            }
+        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = with(MaterialTheme.colorScheme) {
                 surfaceColorAtElevation(if (isScrolled) 3.dp else 0.dp)

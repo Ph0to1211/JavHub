@@ -2,16 +2,9 @@ package com.jadesoft.javhub.presentation.history
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jadesoft.javhub.data.model.History
 import com.jadesoft.javhub.presentation.common.NoDataTip
@@ -28,14 +21,16 @@ fun HistoryScaffold(
     showDialog: Boolean,
     onDelete: (HistoryEvent.DeleteHistory) -> Unit,
     onDeleteAll: (HistoryEvent.DeleteAllHistory) -> Unit,
-    onToggleShowDialog: (HistoryEvent.ToggleShowDialog) -> Unit
+    onToggleShowDialog: (HistoryEvent.ToggleShowDialog) -> Unit,
+    onToggleDrawerOpen: (HistoryEvent.ToggleDrawerOpen) -> Unit
 ) {
     Scaffold(
         topBar = {
             HistoryTopBar(
                 hasHistories = histories.isNotEmpty(),
                 isScrolled = isScrolled,
-                onToggleShowDialog = onToggleShowDialog
+                onToggleShowDialog = onToggleShowDialog,
+                onToggleDrawerOpen = onToggleDrawerOpen
             )
         },
         bottomBar = {

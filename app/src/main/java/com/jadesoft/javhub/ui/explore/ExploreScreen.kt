@@ -89,6 +89,7 @@ fun ExploreScreen(
         onToggleExploreType = exploreViewModel::onEvent,
         onRefreshDatta = exploreViewModel::onEvent,
         onToggleFilter = exploreViewModel::onEvent,
+        onToggleDrawerOpen = exploreViewModel::onEvent,
         navigateToSearch = { navController.navigate("search") }
     )
 

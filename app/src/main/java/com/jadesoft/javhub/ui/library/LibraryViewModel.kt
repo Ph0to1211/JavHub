@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.jadesoft.javhub.data.db.dto.MovieEntity
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.data.preferences.PreferencesManager
+import com.jadesoft.javhub.data.repository.HomeRepository
 import com.jadesoft.javhub.data.repository.LibraryRepository
 import com.jadesoft.javhub.util.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
     private val repository: LibraryRepository,
+    private val homeRepository: HomeRepository,
     private val preferences: PreferencesManager
 ) : ViewModel() {
 
@@ -57,6 +59,7 @@ class LibraryViewModel @Inject constructor(
             is LibraryEvent.OnSelectAll -> handleSelectAll()
             is LibraryEvent.OnReverseSelect -> handleReverseSelect()
             is LibraryEvent.OnToggleShowDialog -> handleToggleShowDialog()
+            is LibraryEvent.OnToggleDrawerOpen -> handleToggleDrawerOpen()
         }
     }
 
@@ -118,6 +121,12 @@ class LibraryViewModel @Inject constructor(
         updateState { copy(
             showDialog = !showDialog
         ) }
+    }
+
+    private fun handleToggleDrawerOpen() {
+        viewModelScope.launch {
+            homeRepository.toggleDrawerOpen()
+        }
     }
 
     fun updateCurrentMovies(movies: List<Movie>) {

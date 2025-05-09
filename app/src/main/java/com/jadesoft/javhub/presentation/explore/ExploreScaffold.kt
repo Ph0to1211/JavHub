@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.jadesoft.javhub.data.model.Genre
-import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.presentation.common.CircularLoading
 import com.jadesoft.javhub.ui.explore.ExploreEvent
 import com.jadesoft.javhub.ui.explore.ExploreItem
@@ -62,6 +61,7 @@ fun ExploreScaffold(
     onToggleExploreType: (ExploreEvent.ToggleExploreType) -> Unit,
     onRefreshDatta: (ExploreEvent.RefreshData) -> Unit,
     onToggleFilter: (ExploreEvent.ToggleFilter) -> Unit,
+    onToggleDrawerOpen: (ExploreEvent.ToggleDrawerShow) -> Unit,
     navigateToSearch: () -> Unit
 ) {
     Scaffold(
@@ -72,6 +72,7 @@ fun ExploreScaffold(
                 onToggleMenu = onToggleMenu,
                 onToggleExploreType = onToggleExploreType,
                 onToggleFilter = onToggleFilter,
+                onToggleDrawerOpen = onToggleDrawerOpen,
                 navigateToSearch = navigateToSearch
             )
         },

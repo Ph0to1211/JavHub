@@ -10,8 +10,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.jadesoft.javhub.presentation.common.NoDataTip
-import com.jadesoft.javhub.presentation.history.HistoryContent
 import com.jadesoft.javhub.presentation.history.HistoryScaffold
 
 @SuppressLint("UnrememberedMutableState")
@@ -44,7 +42,8 @@ fun HistoryScreen(
         showDialog = showDialog,
         onDelete = historyViewModel::onEvent,
         onDeleteAll = historyViewModel::onEvent,
-        onToggleShowDialog = historyViewModel::onEvent
+        onToggleShowDialog = historyViewModel::onEvent,
+        onToggleDrawerOpen = historyViewModel::onEvent
     )
 
 }

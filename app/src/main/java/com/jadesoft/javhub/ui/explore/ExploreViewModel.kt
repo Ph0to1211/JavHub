@@ -1,7 +1,6 @@
 package com.jadesoft.javhub.ui.explore
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,11 +11,10 @@ import com.jadesoft.javhub.data.model.Genre
 import com.jadesoft.javhub.data.model.Movie
 import com.jadesoft.javhub.data.preferences.PreferencesManager
 import com.jadesoft.javhub.data.repository.ExploreRepository
+import com.jadesoft.javhub.data.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
     private val repository: ExploreRepository,
+    private val homeRepository: HomeRepository,
     private val preferences: PreferencesManager
 ) : ViewModel() {
 
@@ -55,6 +54,7 @@ class ExploreViewModel @Inject constructor(
             is ExploreEvent.ToggleMag -> handleToggleMag()
             is ExploreEvent.ToggleExploreType -> handleToggleExploreType(event.enabled)
             is ExploreEvent.ToggleMenu -> handleToggleMenu()
+            is ExploreEvent.ToggleDrawerShow -> handleToggleDrawerOpen()
             is ExploreEvent.RefreshData -> handleRefreshData()
             is ExploreEvent.ScrollToTop -> handleScrollToTop()
             is ExploreEvent.LoadItems -> handleLoadItems()
@@ -134,6 +134,10 @@ class ExploreViewModel @Inject constructor(
 
     private fun handleToggleMenu() {
         updateState { copy(showMenu = !showMenu) }
+    }
+
+    private fun handleToggleDrawerOpen() {
+        homeRepository.toggleDrawerOpen()
     }
 
     private fun handleRefreshData() {

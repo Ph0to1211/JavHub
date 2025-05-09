@@ -36,7 +36,8 @@ fun LibraryScaffold(
     onReverseSelect: (LibraryEvent.OnReverseSelect) -> Unit,
     onUpdateCurrentMovies: (List<Movie>) -> Unit,
     onDialogDismiss: (LibraryEvent.OnToggleShowDialog) -> Unit,
-    onDialogConfirm: (LibraryEvent.DeleteItems) -> Unit
+    onDialogConfirm: (LibraryEvent.DeleteItems) -> Unit,
+    onToggleDrawerOpen: (LibraryEvent.OnToggleDrawerOpen) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -45,7 +46,9 @@ fun LibraryScaffold(
                 onUnSelect = onUnSelect,
                 onSelectAll = onSelectAll,
                 onReverseSelect = onReverseSelect,
-                onToggleShowDialog = onToggleShowDialog
+                onToggleShowDialog = onToggleShowDialog,
+                onToggleDrawerOpen = onToggleDrawerOpen
+
             )
         },
         bottomBar = {
