@@ -92,13 +92,12 @@ object HtmlParser {
         return actresses
     }
 
-    fun parseActressDetail(html: String, censored: Boolean): Actress {
+    fun parseActressDetail(html: String, code: String, censored: Boolean): Actress {
         val document: Document = Jsoup.parse(html)
 
-        val div = document.selectXpath("//div[@class='avatar-box']")
+        val div = document.selectXpath("//div[contains(@class, 'avatar-box')]")
         val mainInfo = div[0].selectXpath(".//img")
         val detailInfo = div[0].selectXpath(".//div[@class='photo-info']/p")
-        val code = ""
         val name = mainInfo.attr("title")
         val avatar = "https://www.javbus.com${mainInfo.attr("src")}"
         var birthday = ""

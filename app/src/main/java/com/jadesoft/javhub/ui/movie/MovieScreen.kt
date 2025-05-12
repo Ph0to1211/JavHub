@@ -68,6 +68,7 @@ fun MovieScreen(
         topBar = { MyTopAppBar(
             navController = navController,
             isPullDown = isPullDown,
+            showHome = true,
             title = name,
         ) },
     ) { innerPadding ->

@@ -7,13 +7,12 @@ import androidx.room.PrimaryKey
 @Entity(
     indices = [Index(value = ["code"], unique = true)]
 )
-data class MovieEntity(
+data class ActressEntity(
     @PrimaryKey(true)
     val id: Int,
-    val tag: String = "",
     val code: String,
-    val title: String,
-    val cover: String,
-    val createDate: String,
-    val censored: Boolean
+    val name: String,
+    val avatar: String,
+    val censored: Boolean,
+    val createDate: String
 )

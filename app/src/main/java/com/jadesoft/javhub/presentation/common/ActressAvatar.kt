@@ -16,14 +16,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jadesoft.javhub.data.model.Actress
-import com.jadesoft.javhub.ui.movie.ListType
 import com.jadesoft.javhub.widget.MyAsyncImage
 
 @Composable
 fun ActressAvatar(
     actress: Actress,
     size: Dp = 0.dp,
-    onClick: (String, String, Boolean, ListType) -> Unit
+    onClick: (String, String, String, Boolean) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -35,7 +34,7 @@ fun ActressAvatar(
             MyAsyncImage(
                 imageUrl = actress.avatar,
                 modifier = Modifier.fillMaxSize().clickable {
-                    onClick(actress.code, actress.name, actress.censored, ListType.Actress)
+                    onClick(actress.code, actress.name, actress.avatar, actress.censored)
                 },
                 contentScale = ContentScale.Crop
             )

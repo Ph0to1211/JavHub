@@ -18,7 +18,6 @@ import com.jadesoft.javhub.presentation.common.ActressList
 fun ExploreActressContent(
     actresses: List<Actress>,
     isLoading: Boolean,
-    censoredType: Boolean,
     scrollState: LazyGridState,
     navController: NavController,
     refreshData: () -> Unit
@@ -42,7 +41,6 @@ fun ExploreActressContent(
         ActressList(
             actresses = actresses,
             isLoading = isLoading,
-            censoredType = censoredType,
             scrollState = scrollState,
             navController = navController
         )

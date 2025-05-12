@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.jadesoft.javhub.navigation.ActressRoute
 import com.jadesoft.javhub.navigation.Home
 import com.jadesoft.javhub.navigation.TypedMovieRoute
 import com.jadesoft.javhub.navigation.VideoRoute
@@ -212,14 +213,13 @@ fun DetailScreen(
                         DetailListTile("演员")
                         DetailActressBar(
                             actresses = movie.actress,
-                            censoredType = censoredType,
-                            onClick = { code, name, censoredType, listType ->
+                            onClick = { code, name, avatarUrl, censored ->
                                 navController.navigate(
-                                    route = TypedMovieRoute(
+                                    route = ActressRoute(
                                         code = code,
                                         name = name,
-                                        censoredType = censoredType,
-                                        listType = listType
+                                        avatarUrl = avatarUrl,
+                                        censored = censored
                                     )
                                 )
                             }

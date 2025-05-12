@@ -89,7 +89,6 @@ fun SearchResultContent(
             ActressList(
                 actresses = actress,
                 isLoading = isLoading,
-                censoredType = false,
                 scrollState = scrollState,
                 navController = navController
             )

@@ -113,7 +113,6 @@ fun ExploreScaffold(
                             ExploreActressContent(
                                 actresses = items.map { (it as ExploreItem.ActressItem).data },
                                 isLoading = isLoadingMovie,
-                                censoredType = showUncensored,
                                 scrollState = scrollState,
                                 navController = navController,
                                 refreshData = { onRefreshDatta(ExploreEvent.RefreshData) }

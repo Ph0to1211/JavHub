@@ -17,13 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jadesoft.javhub.data.model.Actress
-import com.jadesoft.javhub.navigation.TypedMovieRoute
+import com.jadesoft.javhub.navigation.ActressRoute
 
 @Composable
 fun ActressList(
     actresses: List<Actress>,
     isLoading: Boolean,
-    censoredType: Boolean,
     scrollState: LazyGridState,
     navController: NavController,
 ) {
@@ -39,14 +38,13 @@ fun ActressList(
                 key(index) {
                     ActressAvatar(
                         actress = actress,
-                        onClick = { code, name, censoredType, listType ->
+                        onClick = { code, name, avatarUrl, censored ->
                             navController.navigate(
-                                route = TypedMovieRoute(
+                                route = ActressRoute(
                                     code = code,
                                     name = name,
-                                    actressCode = actress.code,
-                                    censoredType = censoredType,
-                                    listType = listType
+                                    avatarUrl = avatarUrl,
+                                    censored = censored
                                 )
                             )
                     })

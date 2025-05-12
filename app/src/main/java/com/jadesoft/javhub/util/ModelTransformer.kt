@@ -1,7 +1,9 @@
 package com.jadesoft.javhub.util
 
+import com.jadesoft.javhub.data.db.dto.ActressEntity
 import com.jadesoft.javhub.data.db.dto.HistoryEntity
 import com.jadesoft.javhub.data.db.dto.MovieEntity
+import com.jadesoft.javhub.data.model.Actress
 import com.jadesoft.javhub.data.model.Movie
 
 fun MovieEntity.toModel(): Movie = Movie(
@@ -19,6 +21,22 @@ fun Movie.toEntity(tag: String, cover: String, createDate: String): MovieEntity 
     cover = cover,
     createDate = createDate,
     censored = this.censored
+)
+
+fun ActressEntity.toModel(): Actress = Actress(
+    code = this.code,
+    name = this.name,
+    avatar = this.avatar,
+    censored = this.censored,
+)
+
+fun Actress.toEntity(createDate: String): ActressEntity = ActressEntity(
+    id = 0,
+    code = this.code,
+    name = this.name,
+    avatar = this.avatar,
+    censored = this.censored,
+    createDate = createDate
 )
 
 fun HistoryEntity.toModel(): Movie = Movie(

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.jadesoft.javhub.data.db.dto.ActressEntity
 import com.jadesoft.javhub.data.db.dto.HistoryEntity
 import com.jadesoft.javhub.data.db.dto.MovieEntity
 import com.jadesoft.javhub.data.db.dto.SearchHistoryEntity
@@ -78,6 +79,22 @@ interface JavHubDao {
     """)
     suspend fun replaceTag(targetTag: String)
 
+    /* ---------- ActressEntity ---------- */
+    @Query("SELECT * FROM actressentity")
+    suspend fun getActress(): List<ActressEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertActress(actress: ActressEntity)
+
+    @Query("DELETE FROM actressentity WHERE code = :code")
+    suspend fun deleteActressByCode(code: String)
+
+    @Query("DELETE FROM actressentity")
+    suspend fun deleteAllActress()
+
+    @Query("SELECT EXISTS(SELECT 1 FROM actressentity WHERE code = :code LIMIT 1)")
+    suspend fun isActressExists(code: String): Boolean
+
 
     /* ---------- HistoryEntity ---------- */
     @Query("SELECT * FROM historyentity")
@@ -108,4 +125,5 @@ interface JavHubDao {
 
     @Query("DELETE FROM searchhistoryentity WHERE `query` = (SELECT `query` FROM searchhistoryentity ORDER BY timestamp ASC LIMIT 1)")
     suspend fun deleteFirstSearchHistory()
+
 }

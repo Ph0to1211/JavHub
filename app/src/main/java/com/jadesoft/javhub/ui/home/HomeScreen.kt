@@ -19,6 +19,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -59,7 +60,8 @@ fun HomeScreen(
     val currentRoute = navBackStackEntry?.destination?.route ?: "library"
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     var initialized by remember { mutableStateOf(false) }
 
@@ -89,6 +91,8 @@ fun HomeScreen(
                 modifier = Modifier.width(300.dp)
             ) {
                 HomeDrawer(
+                    snackbarHostState = snackbarHostState,
+                    coroutineScope = coroutineScope,
                     navController = navController
                 )
             }

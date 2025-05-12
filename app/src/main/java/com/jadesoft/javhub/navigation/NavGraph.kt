@@ -12,7 +12,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.jadesoft.javhub.ui.actress.ActressScreen
 import com.jadesoft.javhub.ui.detail.DetailScreen
+import com.jadesoft.javhub.ui.follow.FollowScreen
 import com.jadesoft.javhub.ui.genre.GenreScreen
 import com.jadesoft.javhub.ui.home.HomeScreen
 import com.jadesoft.javhub.ui.movie.ListType
@@ -37,16 +39,44 @@ fun NavGraph(
         modifier = modifier,
         enterTransition = { enterTransition },
         exitTransition = { exitTransition },
+//        enterTransition = {
+//            fadeIn(animationSpec = tween(durationMillis = 300)) +
+//                    expandHorizontally(animationSpec = tween(durationMillis = 300))
+//        },
+//        exitTransition = {
+//            fadeOut(animationSpec = tween(durationMillis = 300)) +
+//                    shrinkHorizontally(animationSpec = tween(durationMillis = 300))
+//        },
     ) {
 
         composable<Home> { HomeScreen(navController) }
 
-        composable<MovieRoute>{ backStackEntry ->
+        composable<MovieRoute>(
+//            enterTransition = {
+//                fadeIn(animationSpec = tween(durationMillis = 300)) +
+//                        scaleIn(animationSpec = tween(durationMillis = 300), initialScale = 0.3f)
+//            },
+//            exitTransition = {
+//                fadeOut(animationSpec = tween(durationMillis = 300)) +
+//                        scaleOut(animationSpec = tween(durationMillis = 300), targetScale = 0.3f)
+//            }
+        ) { backStackEntry ->
             val movie: MovieRoute = backStackEntry.toRoute()
             DetailScreen(
                 code = movie.code,
                 coverUrl = movie.imgUrl,
                 title = movie.title,
+                navController = navController
+            )
+        }
+
+        composable<ActressRoute>{ backStackEntry ->
+            val actress: ActressRoute = backStackEntry.toRoute()
+            ActressScreen(
+                code = actress.code,
+                name = actress.name,
+                avatarUrl = actress.avatarUrl,
+                censored = actress.censored,
                 navController = navController
             )
         }
@@ -85,6 +115,8 @@ fun NavGraph(
         composable( Destinations.SEARCH ) { SearchScreen(navController) }
         composable( Destinations.SETTING ) { SettingScreen(navController) }
         composable( Destinations.TAG ) { TagScreen(navController) }
+        composable( Destinations.FOLLOW ) { FollowScreen(navController) }
+
     }
 }
 
@@ -93,6 +125,7 @@ object Destinations {
     const val SEARCH = "search"
     const val SETTING = "setting"
     const val TAG = "tag"
+    const val FOLLOW = "follow"
 }
 
 
@@ -101,6 +134,9 @@ object Home
 
 @Serializable
 data class MovieRoute(val code: String, val imgUrl: String, val title: String)
+
+@Serializable
+data class ActressRoute(val code: String, val name: String, val avatarUrl: String, val censored: Boolean)
 
 @Serializable
 data class TypedMovieRoute(
