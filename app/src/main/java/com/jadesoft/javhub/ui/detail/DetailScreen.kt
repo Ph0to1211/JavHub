@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -74,31 +75,24 @@ fun DetailScreen(
     val isVideoUrlInitialized = detailState.value.isVideoUrlInitialized
 
     val snackbarHostState = remember { SnackbarHostState() }
-//    val coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         if (movie == null) {
             detailViewModel.onEvent(DetailEvent.LoadMovie(code))
         }
-        detailViewModel.onEvent(DetailEvent.IsMovieExisted(code))
         if (!isVideoUrlInitialized) {
             detailViewModel.onEvent(DetailEvent.VideoUrlInitialize(code))
+        }
+
+        detailViewModel.snackbarEvent.collect { message ->
+            snackbarHostState.showSnackbar(message)
         }
     }
 
     LaunchedEffect(movie) {
         if (movie != null && !isStealth) {
             detailViewModel.onEvent(DetailEvent.AddToHistory(coverUrl))
-        }
-    }
-
-    LaunchedEffect(isAdded) {
-        if (isUserAction) {
-            val message = if (isAdded) "已添加到库" else "已从库移除"
-
-            snackbarHostState.showSnackbar(
-                message = message
-            )
         }
     }
 

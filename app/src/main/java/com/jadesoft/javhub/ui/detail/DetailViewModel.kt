@@ -13,8 +13,10 @@ import com.jadesoft.javhub.util.toEntity
 import com.jadesoft.javhub.util.toHistoryEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -54,7 +56,10 @@ class DetailViewModel @Inject constructor(
     }
 
     private var daoJob: Job? = null
+    private var checkJob: Job? = null
 
+    private val _snackbarEvent = Channel<String>()
+    val snackbarEvent = _snackbarEvent.receiveAsFlow()
 
     fun onEvent(event: DetailEvent) {
         when(event) {
@@ -65,7 +70,6 @@ class DetailViewModel @Inject constructor(
             is DetailEvent.AddToLibrary -> handelAddToLibrary(event.tags, event.cover)
             is DetailEvent.DeleteToLibrary -> handleDeleteFromLibrary()
             is DetailEvent.AddToHistory -> handleAddToHistory(event.cover)
-            is DetailEvent.IsMovieExisted -> handleIsMovieExisted(event.code)
             is DetailEvent.InitState -> handleInitState()
             is DetailEvent.EditTags -> handleEditTags(event.tag)
             is DetailEvent.ToggleShowDialog -> handleToggleShowDialog()
@@ -77,9 +81,12 @@ class DetailViewModel @Inject constructor(
         updateState { copy(isLoading = true) }
         viewModelScope.launch {
             val res: MovieDetail = repository.getMovieDetail(movieCode)
-            updateState { copy(movie = res) }
+            updateState { copy(
+                movie = res,
+                isLoading = false
+            ) }
+            checkFollowed()
         }
-        updateState { copy(isLoading = false) }
     }
 
     private fun handleVideoUrlInitialize(code: String) {
@@ -125,6 +132,9 @@ class DetailViewModel @Inject constructor(
                 isAdded = true,
                 isUserAction = true
             ) }
+
+            checkFollowed()
+            _snackbarEvent.send("收藏成功～")
         }
     }
 
@@ -136,6 +146,9 @@ class DetailViewModel @Inject constructor(
                 isAdded = false,
                 isUserAction = true
             ) }
+
+            checkFollowed()
+            _snackbarEvent.send("取消收藏成功")
         }
     }
 
@@ -155,11 +168,16 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    private fun handleIsMovieExisted(code: String) {
-        daoJob?.cancel()
-        daoJob = viewModelScope.launch {
+    private fun checkFollowed() {
+        if (_detailState.value.isChecking) return
+        updateState { copy(isChecking = true) }
+
+        checkJob?.cancel()
+        checkJob = viewModelScope.launch {
+            val isAdded = repository.isMovieExists(_detailState.value.movie?.code ?: "")
             updateState { copy(
-                isAdded = repository.isMovieExists(code)
+                isAdded = isAdded,
+                isChecking = false
             ) }
         }
     }

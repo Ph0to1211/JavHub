@@ -5,6 +5,7 @@ import com.jadesoft.javhub.data.model.MovieDetail
 data class DetailState(
     val movie: MovieDetail? = null,
     val isLoading: Boolean = false,
+    val isChecking: Boolean = false,
     val isAdded: Boolean = false,
     val censoredType: Boolean,
     val isStealth: Boolean = false,
