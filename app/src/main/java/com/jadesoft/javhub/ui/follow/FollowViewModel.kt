@@ -2,6 +2,7 @@ package com.jadesoft.javhub.ui.follow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jadesoft.javhub.data.model.Actress
 import com.jadesoft.javhub.data.repository.FollowRepository
 import com.jadesoft.javhub.util.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,23 +23,26 @@ class FollowViewModel @Inject constructor(
     )
     val followState: StateFlow<FollowState> = _followState
 
-    var loadJob: Job? = null
-    var daoJob: Job? = null
+    private var loadJob: Job? = null
+    private var daoJob: Job? = null
 
     fun onEvent(event: FollowEvent) {
         when(event) {
             is FollowEvent.OnRemoveFollow -> handleRemoveFollow()
             is FollowEvent.ToggleShowDialog -> handleToggleShowDialog(event.code)
+            is FollowEvent.ToggleMenuExpanded -> handleToggleMenuExpanded()
+            is FollowEvent.ToggleSortType -> handleToggleSortType(event.type)
         }
     }
 
     fun loadItems() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            val items = repository.getFollowing()
-            println("数据在这里哦\n${items}")
+            val res = repository.getFollowing()
+            val items = sortItems(res.map { it.toModel() })
+            println(items)
             updateState { copy(
-                followings = items.map { it.toModel() },
+                followings = items,
             ) }
         }
     }
@@ -57,6 +61,27 @@ class FollowViewModel @Inject constructor(
                 isShowDialog = code != null,
                 selectedCode = code
             )
+        }
+    }
+
+    private fun handleToggleMenuExpanded() {
+        updateState { copy(isMenuExpanded = !isMenuExpanded) }
+    }
+
+    private fun handleToggleSortType(type: SortType) {
+        daoJob?.cancel()
+        daoJob = viewModelScope.launch {
+            updateState { copy(currentSort = type) }
+            loadItems()
+        }
+    }
+
+    private fun sortItems(items: List<Actress>): List<Actress> {
+        return when(_followState.value.currentSort) {
+            SortType.DATE_DESC -> items.reversed()
+            SortType.DATE_ASC -> items
+            SortType.NAME_DESC -> items.sortedByDescending { it.name.lowercase() }
+            SortType.NAME_ASC -> items.sortedBy { it.name.lowercase() }
         }
     }
 
