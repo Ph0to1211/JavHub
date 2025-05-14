@@ -33,9 +33,7 @@ fun HistoryScaffold(
                 onToggleDrawerOpen = onToggleDrawerOpen
             )
         },
-        bottomBar = {
-            NavigationBar {  }
-        },
+        bottomBar = {},
         content = { innerPadding ->
             if (histories.isNotEmpty()) {
                 HistoryContent(

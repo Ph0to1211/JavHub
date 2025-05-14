@@ -51,9 +51,7 @@ fun LibraryScaffold(
 
             )
         },
-        bottomBar = {
-            NavigationBar {  }
-        },
+        bottomBar = {},
         content = { innerPadding ->
             Column(
                 modifier = Modifier.padding(innerPadding).fillMaxSize()

@@ -122,6 +122,13 @@ dependencies {
     // zoomable
     implementation(libs.zoomable)
 
+    // adaptive
+    implementation(libs.androidx.window)
+    implementation(libs.material3.adaptive)
+    implementation(libs.material3.adaptive.layout)
+    implementation(libs.material3.adaptive.navigation)
+    implementation(libs.material3.adaptive.navigation.suite)
+
 }
 
 kapt {

@@ -16,11 +16,13 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowSize
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,7 +34,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -44,7 +48,6 @@ import com.jadesoft.javhub.presentation.home.HomeDrawer
 import com.jadesoft.javhub.ui.explore.ExploreScreen
 import com.jadesoft.javhub.ui.history.HistoryScreen
 import com.jadesoft.javhub.ui.library.LibraryScreen
-import com.jadesoft.javhub.ui.more.MoreScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -81,8 +84,18 @@ fun HomeScreen(
         BottomBarRoute("收藏", "library", Icons.Filled.Bookmarks, Icons.Outlined.Bookmarks),
         BottomBarRoute("发现", "explore", Icons.Filled.Explore, Icons.Outlined.Explore),
         BottomBarRoute("历史", "history", Icons.Filled.History, Icons.Outlined.History),
-//        BottomBarRoute("更多", "more", Icons.Filled.MoreHoriz, Icons.Outlined.MoreHoriz)
     )
+
+    val windowSize = with(LocalDensity.current) {
+        currentWindowSize().toSize().toDpSize()
+    }
+    val layoutType = if (windowSize.width >= 1200.dp) {
+        NavigationSuiteType.NavigationDrawer
+    } else {
+        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
+            currentWindowAdaptiveInfo()
+        )
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -98,58 +111,47 @@ fun HomeScreen(
             }
         },
     ) {
-        Scaffold(
-            topBar = { },
-            bottomBar = {
-                NavigationBar {
-                    bottomBarRoute.forEach { route ->
-                        NavigationBarItem(
-                            selected = currentDestination?.route == route.route,
-                            onClick = {
-                                homeNavController.navigate(route.route) {
-                                    popUpTo(homeNavController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+        NavigationSuiteScaffold(
+            layoutType = layoutType,
+            navigationSuiteItems = {
+                bottomBarRoute.forEachIndexed { index, item ->
+                    item(
+                        selected = currentRoute == item.route,
+                        onClick = {
+                            homeNavController.navigate(item.route) {
+                                popUpTo(homeNavController.graph.findStartDestination().id) {
+                                    saveState = true
                                 }
-//                            if (route.route != "library") {
-//                                homeNavController.navigate(route.route) {
-//                                    popUpTo(homeNavController.graph.findStartDestination().id) {
-//                                        saveState = true
-//                                    }
-//                                    launchSingleTop = true
-//                                    restoreState = true
-//                                }
-//                            } else {
-//                                homeNavController.navigate(route.route)
-//                            }
-                            },
-                            label = { Text(route.name) },
-                            icon = {
-                                Icon(
-                                    if (currentDestination?.route == route.route) route.selectedIcon else route.unselectedIcon,
-                                    contentDescription = route.name
-                                )
-                            },
-                        )
-                    }
-                }
-            },
-            content = {
-                NavHost(
-                    homeNavController,
-                    startDestination = "library",
-                    enterTransition = { fadeIn(animationSpec = tween(durationMillis = 300)) },
-                    exitTransition = { fadeOut(animationSpec = tween(durationMillis = 300)) },
-                ) {
-                    composable("library") { LibraryScreen(navController) }
-                    composable("history") { HistoryScreen(navController) }
-                    composable("explore") { ExploreScreen(navController) }
-                    composable("more") { MoreScreen(navController) }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = if (currentRoute == item.route) {
+                                    item.selectedIcon
+                                } else {
+                                    item.unselectedIcon
+                                },
+                                contentDescription = item.name
+                            )
+                        },
+                        label = { Text(item.name) }
+                    )
                 }
             }
-        )
+        ) {
+            NavHost(
+                navController = homeNavController,
+                startDestination = "library",
+                enterTransition = { fadeIn(animationSpec = tween(300)) },
+                exitTransition = { fadeOut(animationSpec = tween(300)) }
+            ) {
+                composable("library") { LibraryScreen(navController) }
+                composable("history") { HistoryScreen(navController) }
+                composable("explore") { ExploreScreen(navController) }
+            }
+        }
     }
 }
 
